@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MTG Karten-Editor</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mana-font@latest/css/mana.min.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>MTG Karten-Editor</h1>
+      <p>Einzelne HTML-Datei: per Doppelklick öffnen, kein lokaler Server nötig. Internet wird nur für Kartensuche, Originalbilder und die Editor-Bibliothek benötigt.</p>
+    </div>
+    <div class="status" id="status">Bereit</div>
+  </header>
+
+  <main class="app-grid">
+    <aside class="panel controls">
+      <section>
+        <h2>Karte laden</h2>
+        <label for="cardSearch">Kartenname</label>
+        <div class="row">
+          <input id="cardSearch" type="text" placeholder="z. B. Sol Ring" autocomplete="off" />
+          <button id="searchBtn" class="primary">Suchen</button>
+        </div>
+
+        <label for="languageSelect">Sprache</label>
+        <select id="languageSelect">
+          <option value="en">Englisch</option>
+          <option value="de">Deutsch</option>
+        </select>
+        <label for="editionSelect">Edition</label>
+        <select id="editionSelect" disabled>
+          <option value="">Erst Karte suchen …</option>
+        </select>
+        <p class="hint">Wähle Sprache und Edition getrennt. Wenn eine Edition nicht auf Deutsch verfügbar ist, wird die englische Version derselben Edition verwendet.</p>
+
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:grid;gap:9px;">
+          <label style="display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;">
+            <input id="setSymbolToggle" type="checkbox" checked style="width:auto;" />
+            Set-Symbol anzeigen
+          </label>
+          <label for="setSymbolSelect">Set-Symbol</label>
+          <select id="setSymbolSelect" disabled>
+            <option value="">Erst Karte suchen …</option>
+          </select>
+          <label for="raritySelect">Seltenheit / Symbolfarbe</label>
+          <select id="raritySelect">
+            <option value="common">Common</option>
+            <option value="uncommon">Uncommon</option>
+            <option value="rare">Rare</option>
+            <option value="mythic">Mythic Rare</option>
+          </select>
+          <p class="hint">Das Set-Symbol ist standardmäßig AUS. Es gibt nur ein eigenes Set-Symbol; das automatisch geladene Artwork enthält kein gedrucktes Set-Logo mehr. Position und Größe werden im Browser gemerkt. Die Seltenheit bestimmt die Farbe des Symbols.</p>
+        </div>
+
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:grid;gap:9px;">
+          <label style="display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;">
+            <input id="legendCrownToggle" type="checkbox" checked style="width:auto;" />
+            Legendary Crown automatisch anzeigen
+          </label>
+          <p class="hint">Bei legendären Karten wird automatisch die passende, von dir angepasste Crown über dem Frame eingeblendet.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Rahmen & Artwork</h2>
+        <label for="templateSelect">Rahmen-Vorlage</label>
+        <select id="templateSelect"></select>
+
+        <label for="frameStyleQuick">Schnellauswahl Stil</label>
+        <div class="row">
+          <button id="frameStyleNewBtn" class="primary" type="button">Neu</button>
+          <button id="frameStyleOldBtn" type="button">Alt / Vintage</button>
+        </div>
+
+        <div class="row wrap">
+          <button id="reloadTemplatesBtn">Standardrahmen laden</button>
+          <label class="file-btn">Rahmen hinzufügen<input id="frameUpload" type="file" multiple accept="image/png,image/jpeg,image/webp" /></label>
+        </div>
+
+        <p class="hint">Alle eingebauten neuen und alten Frames stehen in „Rahmen-Vorlage“. Mit Neu/Alt kannst du schnell den Stil wechseln; beim Kartenladen wird innerhalb des gewählten Stils automatisch der passende Farb-Frame gewählt. Unterstützt werden jetzt alle 10 Zweifarb-Frames (WU, WB, RW, GW, UB, UR, GU, BR, BG, RG), die entsprechenden Land-Frames, Multicolor, Artifact sowie Vehicle.png.</p>
+        <label class="file-btn wide">Eigenes Artwork hochladen<input id="artUpload" type="file" accept="image/*" /></label>
+        <div class="row wrap">
+          <button id="sendArtBackBtn">Artwork nach hinten</button>
+          <button id="fitArtBtn">Bild einpassen</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Texte</h2>
+        <div class="field-grid">
+          <label>Name<input id="titleInput" data-bind="title" type="text" /></label>
+          <label>Mana<input id="manaInput" data-bind="mana" type="text" /></label>
+          <label>Typ<input id="typeInput" data-bind="type" type="text" /></label>
+          <label class="span2">Kartentext<textarea id="rulesInput" data-bind="rules" rows="7"></textarea></label>
+          <label class="span2" style="display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;">
+            <input id="flavorToggle" type="checkbox" checked style="width:auto;" /> Flavor-Text anzeigen
+          </label>
+          <label id="flavorField" class="span2">Flavor-Text<textarea id="flavorInput" data-bind="flavor" rows="3"></textarea></label>
+          <label>P/T<input id="ptInput" data-bind="pt" type="text" /></label>
+          <label style="display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;">
+            <input id="ptBackgroundToggle" type="checkbox" checked style="width:auto;" />
+            P/T-Hintergrund anzeigen
+          </label>
+        </div>
+        <p class="hint">Jedes Textelement kann direkt auf der Karte mit der Maus verschoben, skaliert und gedreht werden. Die Manakosten sind rechts verankert und wachsen bei zusätzlichen Symbolen nach links. {W}, {2}, {T}, {Q}, {W/U}, {U/P} und {2/G} werden automatisch als Symbole dargestellt.</p>
+      </section>
+
+      <section>
+        <h2>Ausgewähltes Element</h2>
+        <div class="field-grid compact">
+          <label>Schriftart<select id="fontFamily"><option value="Arial">Arial (lokal)</option><option value="Georgia">Georgia (lokal)</option><option value="Times New Roman">Times New Roman (lokal)</option><option value="Cinzel">Cinzel (GitHub)</option><option value="EB Garamond">EB Garamond (GitHub)</option><option value="Noto Serif">Noto Serif (GitHub)</option></select></label>
+          <label>Schriftgröße<input id="fontSize" type="number" min="6" max="160" step="1" /></label>
+          <label>Textbox-Breite<input id="textWidth" type="number" min="40" max="980" step="1" /></label>
+          <label>Deckkraft<input id="opacity" type="number" min="0.1" max="1" step="0.05" /></label>
+          <label>Textfarbe<input id="textColor" type="color" value="#111111" /></label>
+          <label class="span2" style="display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;">
+            <input id="autoTextContrastToggle" type="checkbox" checked style="width:auto;" />
+            Textfarbe automatisch an Hintergrund anpassen
+          </label>
+        </div>
+        <div class="row wrap"><button id="mtgFontPresetBtn">MTG-Schriftstil laden</button><button id="reloadSymbolsBtn">Mana-Symbole neu laden</button><label class="file-btn">Eigene Schrift laden<input id="fontUpload" type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" /></label></div>
+        <div id="fontStatus" class="mini-status"></div><p class="hint">Für Kartentext: zuerst den Kartentextblock auf der Karte anklicken, dann hier Schriftart/Größe ändern.</p>
+        <p class="hint">Online-Schriften werden bei Bedarf direkt aus GitHub geladen. Eigene TTF/OTF/WOFF-Dateien können lokal geladen werden. Damit kannst du auch Beleren verwenden, sofern du die Font-Datei selbst rechtmäßig besitzt. Mana-, Hybrid-, Phyrexian-, Tap- und Untap-Symbole werden live geladen und im Browser zwischengespeichert.</p>
+        <div class="row wrap">
+          <button id="bringForwardBtn">Eine Ebene vor</button>
+          <button id="sendBackwardBtn">Eine Ebene zurück</button>
+          <button id="deleteBtn" class="danger">Löschen</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Layout</h2>
+        <label for="builtinLayoutSelect">Layout-Vorlage</label>
+        <select id="builtinLayoutSelect">
+          <option value="builtin:standard" selected>Standard</option>
+          <option value="builtin:vintage">Vintage</option>
+        </select>
+
+        <label for="layoutName">Layout-Name</label>
+        <input id="layoutName" type="text" value="Mein Layout" />
+        <div class="row wrap">
+          <button id="saveLayoutBtn" class="primary">Layout speichern</button>
+          <button id="loadLayoutBtn">Layout laden</button>
+          <button id="resetLayoutBtn">Standardpositionen</button>
+        </div>
+        <div class="row wrap">
+          <button id="downloadLayoutBtn">Layout JSON herunterladen</button>
+          <label class="file-btn">Layout JSON öffnen<input id="layoutUpload" type="file" accept="application/json,.json" /></label>
+        </div>
+      </section>
+
+      <section>
+        <h2>Export</h2>
+        <button id="exportBtn" class="primary wide">Karte als PNG exportieren</button>
+      </section>
+    </aside>
+
+    <section class="workspace">
+      <div class="editor-column">
+        <div class="section-title"><h2>Deine Karte</h2><span>1005 × 1407</span></div>
+        <div class="canvas-wrap">
+          <canvas id="cardCanvas" width="1005" height="1407"></canvas>
+        </div>
+      </div>
+
+      <div class="original-column">
+        <div class="section-title"><h2>Originalkarte</h2><span id="originalLangLabel">EN</span></div>
+        <div class="original-card-wrap">
+          <img id="originalCard" alt="Originalkarte als PNG" />
+          <div id="originalPlaceholder">Nach der Suche erscheint hier die Originalkarte als PNG.</div>
+        </div>
+        <div class="original-actions">
+          <a id="originalPngLink" class="button-link disabled" target="_blank" rel="noopener">Original-PNG öffnen</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Diese Datei läuft direkt per Doppelklick ohne lokalen Server. Kartensuche, Editionen und Originalbilder benötigen Internetzugang und werden über Scryfall geladen.
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
