@@ -11,7 +11,7 @@
   <header class="topbar">
     <div>
       <h1>MTG Karten-Editor</h1>
-      <p>Karte suchen, Frame wählen, Artwork und Texte bearbeiten und als PNG exportieren.</p>
+      <p>Karte suchen, Frame-Stil wählen, Artwork und Texte bearbeiten und als PNG exportieren.</p>
     </div>
     <div class="status" id="status">Bereit</div>
   </header>
@@ -76,11 +76,11 @@
         <label for="templateSelect">Rahmen-Vorlage</label>
         <select id="templateSelect"></select>
 
-        <label for="frameStyleQuick">Schnellauswahl Stil</label>
-        <div class="row">
-          <button id="frameStyleNewBtn" class="primary" type="button">Neu</button>
-          <button id="frameStyleOldBtn" type="button">Alt / Vintage</button>
-        </div>
+        <label for="frameStyleSelect">Schnellauswahl Stil</label>
+        <select id="frameStyleSelect">
+          <option value="">Stile werden geladen …</option>
+        </select>
+        <p class="hint">Jeder Unterordner in <code>frames/</code> wird als eigener Frame-Stil erkannt. Neue Ordner erscheinen automatisch nach Aktualisierung der Frame-Liste.</p>
 
         <div class="row wrap">
           <button id="reloadTemplatesBtn">Standardrahmen laden</button>

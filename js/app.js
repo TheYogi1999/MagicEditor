@@ -60,6 +60,7 @@
   const BUILTIN_FRAMES = [{"name": "Neu – frame_artifact.png", "originalName": "frame_artifact.png", "style": "new", "file": "frames/new/frame_artifact.png"}, {"name": "Neu – frame_BG.png", "originalName": "frame_BG.png", "style": "new", "file": "frames/new/frame_BG.png"}, {"name": "Neu – frame_black.png", "originalName": "frame_black.png", "style": "new", "file": "frames/new/frame_black.png"}, {"name": "Neu – frame_blue.png", "originalName": "frame_blue.png", "style": "new", "file": "frames/new/frame_blue.png"}, {"name": "Neu – frame_BR.png", "originalName": "frame_BR.png", "style": "new", "file": "frames/new/frame_BR.png"}, {"name": "Neu – frame_colorless.png", "originalName": "frame_colorless.png", "style": "new", "file": "frames/new/frame_colorless.png"}, {"name": "Neu – frame_green.png", "originalName": "frame_green.png", "style": "new", "file": "frames/new/frame_green.png"}, {"name": "Neu – frame_GU.png", "originalName": "frame_GU.png", "style": "new", "file": "frames/new/frame_GU.png"}, {"name": "Neu – frame_GW.png", "originalName": "frame_GW.png", "style": "new", "file": "frames/new/frame_GW.png"}, {"name": "Neu – frame_land.png", "originalName": "frame_land.png", "style": "new", "file": "frames/new/frame_land.png"}, {"name": "Neu – frame_land_BG.png", "originalName": "frame_land_BG.png", "style": "new", "file": "frames/new/frame_land_BG.png"}, {"name": "Neu – frame_land_black.png", "originalName": "frame_land_black.png", "style": "new", "file": "frames/new/frame_land_black.png"}, {"name": "Neu – frame_land_blue.png", "originalName": "frame_land_blue.png", "style": "new", "file": "frames/new/frame_land_blue.png"}, {"name": "Neu – frame_land_BR.png", "originalName": "frame_land_BR.png", "style": "new", "file": "frames/new/frame_land_BR.png"}, {"name": "Neu – frame_land_green.png", "originalName": "frame_land_green.png", "style": "new", "file": "frames/new/frame_land_green.png"}, {"name": "Neu – frame_land_GU.png", "originalName": "frame_land_GU.png", "style": "new", "file": "frames/new/frame_land_GU.png"}, {"name": "Neu – frame_land_GW.png", "originalName": "frame_land_GW.png", "style": "new", "file": "frames/new/frame_land_GW.png"}, {"name": "Neu – frame_land_multicolor.png", "originalName": "frame_land_multicolor.png", "style": "new", "file": "frames/new/frame_land_multicolor.png"}, {"name": "Neu – frame_land_red.png", "originalName": "frame_land_red.png", "style": "new", "file": "frames/new/frame_land_red.png"}, {"name": "Neu – frame_land_RG.png", "originalName": "frame_land_RG.png", "style": "new", "file": "frames/new/frame_land_RG.png"}, {"name": "Neu – frame_land_rw.png", "originalName": "frame_land_rw.png", "style": "new", "file": "frames/new/frame_land_rw.png"}, {"name": "Neu – frame_land_UB.png", "originalName": "frame_land_UB.png", "style": "new", "file": "frames/new/frame_land_UB.png"}, {"name": "Neu – frame_land_UR.png", "originalName": "frame_land_UR.png", "style": "new", "file": "frames/new/frame_land_UR.png"}, {"name": "Neu – frame_land_WB.png", "originalName": "frame_land_WB.png", "style": "new", "file": "frames/new/frame_land_WB.png"}, {"name": "Neu – frame_land_white.png", "originalName": "frame_land_white.png", "style": "new", "file": "frames/new/frame_land_white.png"}, {"name": "Neu – frame_land_WU.png", "originalName": "frame_land_WU.png", "style": "new", "file": "frames/new/frame_land_WU.png"}, {"name": "Neu – frame_multicolor.png", "originalName": "frame_multicolor.png", "style": "new", "file": "frames/new/frame_multicolor.png"}, {"name": "Neu – frame_red.png", "originalName": "frame_red.png", "style": "new", "file": "frames/new/frame_red.png"}, {"name": "Neu – frame_RG.png", "originalName": "frame_RG.png", "style": "new", "file": "frames/new/frame_RG.png"}, {"name": "Neu – frame_RW.png", "originalName": "frame_RW.png", "style": "new", "file": "frames/new/frame_RW.png"}, {"name": "Neu – frame_UB.png", "originalName": "frame_UB.png", "style": "new", "file": "frames/new/frame_UB.png"}, {"name": "Neu – frame_UR.png", "originalName": "frame_UR.png", "style": "new", "file": "frames/new/frame_UR.png"}, {"name": "Neu – frame_WB.png", "originalName": "frame_WB.png", "style": "new", "file": "frames/new/frame_WB.png"}, {"name": "Neu – frame_white.png", "originalName": "frame_white.png", "style": "new", "file": "frames/new/frame_white.png"}, {"name": "Neu – frame_WU.png", "originalName": "frame_WU.png", "style": "new", "file": "frames/new/frame_WU.png"}, {"name": "Neu – Vehicle.png", "originalName": "Vehicle.png", "style": "new", "file": "frames/new/Vehicle.png"}, {"name": "Alt – frame_artifact.png", "originalName": "frame_artifact.png", "style": "old", "file": "frames/vintage/frame_artifact.png"}, {"name": "Alt – frame_bg.png", "originalName": "frame_bg.png", "style": "old", "file": "frames/vintage/frame_bg.png"}, {"name": "Alt – frame_black.png", "originalName": "frame_black.png", "style": "old", "file": "frames/vintage/frame_black.png"}, {"name": "Alt – frame_blue.png", "originalName": "frame_blue.png", "style": "old", "file": "frames/vintage/frame_blue.png"}, {"name": "Alt – frame_br.png", "originalName": "frame_br.png", "style": "old", "file": "frames/vintage/frame_br.png"}, {"name": "Alt – frame_green.png", "originalName": "frame_green.png", "style": "old", "file": "frames/vintage/frame_green.png"}, {"name": "Alt – frame_gu.png", "originalName": "frame_gu.png", "style": "old", "file": "frames/vintage/frame_gu.png"}, {"name": "Alt – frame_gw.png", "originalName": "frame_gw.png", "style": "old", "file": "frames/vintage/frame_gw.png"}, {"name": "Alt – frame_land_bg.png", "originalName": "frame_land_bg.png", "style": "old", "file": "frames/vintage/frame_land_bg.png"}, {"name": "Alt – frame_land_black.png", "originalName": "frame_land_black.png", "style": "old", "file": "frames/vintage/frame_land_black.png"}, {"name": "Alt – frame_land_blue.png", "originalName": "frame_land_blue.png", "style": "old", "file": "frames/vintage/frame_land_blue.png"}, {"name": "Alt – frame_land_br.png", "originalName": "frame_land_br.png", "style": "old", "file": "frames/vintage/frame_land_br.png"}, {"name": "Alt – frame_land_green.png", "originalName": "frame_land_green.png", "style": "old", "file": "frames/vintage/frame_land_green.png"}, {"name": "Alt – frame_land_gu.png", "originalName": "frame_land_gu.png", "style": "old", "file": "frames/vintage/frame_land_gu.png"}, {"name": "Alt – frame_land_gw.png", "originalName": "frame_land_gw.png", "style": "old", "file": "frames/vintage/frame_land_gw.png"}, {"name": "Alt – frame_land_multicolor.png", "originalName": "frame_land_multicolor.png", "style": "old", "file": "frames/vintage/frame_land_multicolor.png"}, {"name": "Alt – frame_land_red.png", "originalName": "frame_land_red.png", "style": "old", "file": "frames/vintage/frame_land_red.png"}, {"name": "Alt – frame_land_rg.png", "originalName": "frame_land_rg.png", "style": "old", "file": "frames/vintage/frame_land_rg.png"}, {"name": "Alt – frame_land_rw.png", "originalName": "frame_land_rw.png", "style": "old", "file": "frames/vintage/frame_land_rw.png"}, {"name": "Alt – frame_land_ub.png", "originalName": "frame_land_ub.png", "style": "old", "file": "frames/vintage/frame_land_ub.png"}, {"name": "Alt – frame_land_ur.png", "originalName": "frame_land_ur.png", "style": "old", "file": "frames/vintage/frame_land_ur.png"}, {"name": "Alt – frame_land_wb.png", "originalName": "frame_land_wb.png", "style": "old", "file": "frames/vintage/frame_land_wb.png"}, {"name": "Alt – frame_land_white.png", "originalName": "frame_land_white.png", "style": "old", "file": "frames/vintage/frame_land_white.png"}, {"name": "Alt – frame_land_wu.png", "originalName": "frame_land_wu.png", "style": "old", "file": "frames/vintage/frame_land_wu.png"}, {"name": "Alt – frame_multicolor.png", "originalName": "frame_multicolor.png", "style": "old", "file": "frames/vintage/frame_multicolor.png"}, {"name": "Alt – frame_red.png", "originalName": "frame_red.png", "style": "old", "file": "frames/vintage/frame_red.png"}, {"name": "Alt – frame_rg.png", "originalName": "frame_rg.png", "style": "old", "file": "frames/vintage/frame_rg.png"}, {"name": "Alt – frame_rw.png", "originalName": "frame_rw.png", "style": "old", "file": "frames/vintage/frame_rw.png"}, {"name": "Alt – frame_ub.png", "originalName": "frame_ub.png", "style": "old", "file": "frames/vintage/frame_ub.png"}, {"name": "Alt – frame_ur.png", "originalName": "frame_ur.png", "style": "old", "file": "frames/vintage/frame_ur.png"}, {"name": "Alt – frame_wb.png", "originalName": "frame_wb.png", "style": "old", "file": "frames/vintage/frame_wb.png"}, {"name": "Alt – frame_white.png", "originalName": "frame_white.png", "style": "old", "file": "frames/vintage/frame_white.png"}, {"name": "Alt – frame_wu.png", "originalName": "frame_wu.png", "style": "old", "file": "frames/vintage/frame_wu.png"}];
   const SAVED_LAYOUTS_KEY = 'mtg-card-editor-layouts-v3';
   let currentFrameStyle = 'new';
+  let availableFrameStyles = [];
 
   const BUILTIN_LEGEND_CROWNS = {"A": "overlays/crowns/A.png", "B": "overlays/crowns/B.png", "BG": "overlays/crowns/BG.png", "BR": "overlays/crowns/BR.png", "C": "overlays/crowns/C.png", "G": "overlays/crowns/G.png", "GU": "overlays/crowns/GU.png", "GW": "overlays/crowns/GW.png", "L": "overlays/crowns/L.png", "M": "overlays/crowns/M.png", "R": "overlays/crowns/R.png", "RG": "overlays/crowns/RG.png", "RW": "overlays/crowns/RW.png", "U": "overlays/crowns/U.png", "UB": "overlays/crowns/UB.png", "UR": "overlays/crowns/UR.png", "W": "overlays/crowns/W.png", "WB": "overlays/crowns/WB.png", "WU": "overlays/crowns/WU.png"};
   const BUILTIN_PT_BACKGROUNDS = {"A": "overlays/pt/A.png", "B": "overlays/pt/B.png", "C": "overlays/pt/C.png", "G": "overlays/pt/G.png", "M": "overlays/pt/M.png", "R": "overlays/pt/R.png", "U": "overlays/pt/U.png", "V": "overlays/pt/V.png", "W": "overlays/pt/W.png"};
@@ -1175,18 +1176,44 @@
   }
 
   function setQuickFrameStyle(style, autoApply = true) {
-    currentFrameStyle = style === 'old' ? 'old' : 'new';
-    const newBtn = $('frameStyleNewBtn');
-    const oldBtn = $('frameStyleOldBtn');
-    if (newBtn && oldBtn) {
-      newBtn.classList.toggle('primary', currentFrameStyle === 'new');
-      oldBtn.classList.toggle('primary', currentFrameStyle === 'old');
+    const fallback = availableFrameStyles[0]?.id || 'new';
+    currentFrameStyle = availableFrameStyles.some(s => s.id === style) ? style : fallback;
+    const sel = $('frameStyleSelect');
+    if (sel) sel.value = currentFrameStyle;
+    if (autoApply && (state.localizedCard || state.cardBase)) {
+      autoSelectFrameForCard(state.localizedCard || state.cardBase);
     }
-    if (autoApply && (state.localizedCard || state.cardBase)) autoSelectFrameForCard(state.localizedCard || state.cardBase);
   }
 
   function templateStyleOf(tpl) {
-    return tpl?.style === 'old' ? 'old' : 'new';
+    return String(tpl?.style || 'new');
+  }
+
+  function frameStyleLabel(id) {
+    const found = availableFrameStyles.find(s => s.id === id);
+    if (found?.label) return found.label;
+    if (id === 'new') return 'Neu';
+    if (id === 'vintage' || id === 'old') return 'Alt / Vintage';
+    return String(id || '').replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  function refreshFrameStyleSelect(preferred = null) {
+    const sel = $('frameStyleSelect');
+    if (!sel) return;
+    const wanted = preferred || currentFrameStyle || availableFrameStyles[0]?.id || 'new';
+    sel.innerHTML = '';
+    for (const style of availableFrameStyles) {
+      const opt = document.createElement('option');
+      opt.value = style.id;
+      opt.textContent = style.label || frameStyleLabel(style.id);
+      sel.appendChild(opt);
+    }
+    if (![...sel.options].some(o => o.value === wanted) && sel.options.length) {
+      currentFrameStyle = sel.options[0].value;
+    } else {
+      currentFrameStyle = wanted;
+    }
+    sel.value = currentFrameStyle;
   }
 
   async function searchCard() {
@@ -1536,30 +1563,72 @@
   }
 
   async function loadTemplateManifest() {
-    state.templates = BUILTIN_FRAMES.map(x => ({...x}));
+    let manifest = null;
+    try {
+      const res = await fetch('frames/manifest.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      manifest = await res.json();
+    } catch (err) {
+      console.warn('frames/manifest.json konnte nicht geladen werden, nutze eingebauten Fallback.', err);
+    }
+
+    if (manifest?.styles?.length) {
+      availableFrameStyles = manifest.styles.map(s => ({
+        id: String(s.id),
+        label: s.label || frameStyleLabel(s.id)
+      }));
+
+      state.templates = [];
+      for (const style of manifest.styles) {
+        for (const frame of style.frames || []) {
+          state.templates.push({
+            name: `${style.label || style.id} – ${frame.name}`,
+            originalName: frame.name,
+            file: frame.path,
+            style: String(style.id)
+          });
+        }
+      }
+    } else {
+      state.templates = BUILTIN_FRAMES.map(x => ({...x}));
+      availableFrameStyles = [...new Map(
+        state.templates.map(t => [templateStyleOf(t), {
+          id: templateStyleOf(t),
+          label: frameStyleLabel(templateStyleOf(t))
+        }])
+      ).values()];
+    }
+
     const select = $('templateSelect');
     select.innerHTML = '';
 
-    const groups = [
-      { style:'new', label:'Neu' },
-      { style:'old', label:'Alt / Vintage' }
-    ];
-
-    groups.forEach(g => {
+    for (const style of availableFrameStyles) {
       const og = document.createElement('optgroup');
-      og.label = g.label;
+      og.label = style.label || frameStyleLabel(style.id);
+
       state.templates.forEach((tpl, i) => {
-        if (templateStyleOf(tpl) !== g.style) return;
+        if (templateStyleOf(tpl) !== style.id) return;
         const opt = document.createElement('option');
         opt.value = String(i);
         opt.textContent = tpl.originalName || tpl.name || 'Rahmen';
         og.appendChild(opt);
       });
-      select.appendChild(og);
-    });
 
-    const firstNew = state.templates.findIndex(t => templateStyleOf(t) === 'new' && normalizeFrameFilename(t.originalName) === 'frame_colorless');
-    state.currentTemplateIndex = firstNew >= 0 ? firstNew : 0;
+      select.appendChild(og);
+    }
+
+    const preferred = availableFrameStyles.some(s => s.id === 'new')
+      ? 'new'
+      : (availableFrameStyles[0]?.id || 'new');
+    currentFrameStyle = preferred;
+    refreshFrameStyleSelect(preferred);
+
+    const firstPreferred = state.templates.findIndex(t =>
+      templateStyleOf(t) === preferred &&
+      normalizeFrameFilename(t.originalName) === 'frame_colorless'
+    );
+    const firstStyle = state.templates.findIndex(t => templateStyleOf(t) === preferred);
+    state.currentTemplateIndex = firstPreferred >= 0 ? firstPreferred : (firstStyle >= 0 ? firstStyle : 0);
     select.value = String(state.currentTemplateIndex);
   }
 
@@ -1630,8 +1699,7 @@
       state.setSymbolRarity = e.target.value;
       if (state.setSymbolEnabled) await refreshSetSymbolFromControls(true);
     });
-    $('frameStyleNewBtn').addEventListener('click', () => setQuickFrameStyle('new', true));
-    $('frameStyleOldBtn').addEventListener('click', () => setQuickFrameStyle('old', true));
+    $('frameStyleSelect').addEventListener('change', e => setQuickFrameStyle(e.target.value, true));
     $('builtinLayoutSelect').addEventListener('change', e => applyLayoutPresetValue(e.target.value));
     $('autoTextContrastToggle').addEventListener('change', e => setAutoTextContrast(e.target.checked));
     $('flavorToggle').addEventListener('change', e => setFlavorEnabled(e.target.checked));
@@ -1647,7 +1715,7 @@
     });
     $('reloadTemplatesBtn').addEventListener('click', async () => {
       await loadTemplateManifest();
-      setQuickFrameStyle('new', false);
+      setQuickFrameStyle(currentFrameStyle, false);
       const tpl = state.templates[state.currentTemplateIndex];
       if (tpl) loadTemplate(tpl.file, tpl.name);
       if (state.localizedCard || state.cardBase) autoSelectFrameForCard(state.localizedCard || state.cardBase);

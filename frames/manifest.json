@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "styles": [
+    {
+      "id": "new",
+      "label": "Neu",
+      "frames": [
+        {
+          "name": "frame_artifact.png",
+          "path": "frames/new/frame_artifact.png"
+        },
+        {
+          "name": "frame_BG.png",
+          "path": "frames/new/frame_BG.png"
+        },
+        {
+          "name": "frame_black.png",
+          "path": "frames/new/frame_black.png"
+        },
+        {
+          "name": "frame_blue.png",
+          "path": "frames/new/frame_blue.png"
+        },
+        {
+          "name": "frame_BR.png",
+          "path": "frames/new/frame_BR.png"
+        },
+        {
+          "name": "frame_colorless.png",
+          "path": "frames/new/frame_colorless.png"
+        },
+        {
+          "name": "frame_green.png",
+          "path": "frames/new/frame_green.png"
+        },
+        {
+          "name": "frame_GU.png",
+          "path": "frames/new/frame_GU.png"
+        },
+        {
+          "name": "frame_GW.png",
+          "path": "frames/new/frame_GW.png"
+        },
+        {
+          "name": "frame_land.png",
+          "path": "frames/new/frame_land.png"
+        },
+        {
+          "name": "frame_land_BG.png",
+          "path": "frames/new/frame_land_BG.png"
+        },
+        {
+          "name": "frame_land_black.png",
+          "path": "frames/new/frame_land_black.png"
+        },
+        {
+          "name": "frame_land_blue.png",
+          "path": "frames/new/frame_land_blue.png"
+        },
+        {
+          "name": "frame_land_BR.png",
+          "path": "frames/new/frame_land_BR.png"
+        },
+        {
+          "name": "frame_land_green.png",
+          "path": "frames/new/frame_land_green.png"
+        },
+        {
+          "name": "frame_land_GU.png",
+          "path": "frames/new/frame_land_GU.png"
+        },
+        {
+          "name": "frame_land_GW.png",
+          "path": "frames/new/frame_land_GW.png"
+        },
+        {
+          "name": "frame_land_multicolor.png",
+          "path": "frames/new/frame_land_multicolor.png"
+        },
+        {
+          "name": "frame_land_red.png",
+          "path": "frames/new/frame_land_red.png"
+        },
+        {
+          "name": "frame_land_RG.png",
+          "path": "frames/new/frame_land_RG.png"
+        },
+        {
+          "name": "frame_land_rw.png",
+          "path": "frames/new/frame_land_rw.png"
+        },
+        {
+          "name": "frame_land_UB.png",
+          "path": "frames/new/frame_land_UB.png"
+        },
+        {
+          "name": "frame_land_UR.png",
+          "path": "frames/new/frame_land_UR.png"
+        },
+        {
+          "name": "frame_land_WB.png",
+          "path": "frames/new/frame_land_WB.png"
+        },
+        {
+          "name": "frame_land_white.png",
+          "path": "frames/new/frame_land_white.png"
+        },
+        {
+          "name": "frame_land_WU.png",
+          "path": "frames/new/frame_land_WU.png"
+        },
+        {
+          "name": "frame_multicolor.png",
+          "path": "frames/new/frame_multicolor.png"
+        },
+        {
+          "name": "frame_red.png",
+          "path": "frames/new/frame_red.png"
+        },
+        {
+          "name": "frame_RG.png",
+          "path": "frames/new/frame_RG.png"
+        },
+        {
+          "name": "frame_RW.png",
+          "path": "frames/new/frame_RW.png"
+        },
+        {
+          "name": "frame_UB.png",
+          "path": "frames/new/frame_UB.png"
+        },
+        {
+          "name": "frame_UR.png",
+          "path": "frames/new/frame_UR.png"
+        },
+        {
+          "name": "frame_WB.png",
+          "path": "frames/new/frame_WB.png"
+        },
+        {
+          "name": "frame_white.png",
+          "path": "frames/new/frame_white.png"
+        },
+        {
+          "name": "frame_WU.png",
+          "path": "frames/new/frame_WU.png"
+        },
+        {
+          "name": "Vehicle.png",
+          "path": "frames/new/Vehicle.png"
+        }
+      ]
+    },
+    {
+      "id": "vintage",
+      "label": "Alt / Vintage",
+      "frames": [
+        {
+          "name": "frame_artifact.png",
+          "path": "frames/vintage/frame_artifact.png"
+        },
+        {
+          "name": "frame_bg.png",
+          "path": "frames/vintage/frame_bg.png"
+        },
+        {
+          "name": "frame_black.png",
+          "path": "frames/vintage/frame_black.png"
+        },
+        {
+          "name": "frame_blue.png",
+          "path": "frames/vintage/frame_blue.png"
+        },
+        {
+          "name": "frame_br.png",
+          "path": "frames/vintage/frame_br.png"
+        },
+        {
+          "name": "frame_green.png",
+          "path": "frames/vintage/frame_green.png"
+        },
+        {
+          "name": "frame_gu.png",
+          "path": "frames/vintage/frame_gu.png"
+        },
+        {
+          "name": "frame_gw.png",
+          "path": "frames/vintage/frame_gw.png"
+        },
+        {
+          "name": "frame_land_bg.png",
+          "path": "frames/vintage/frame_land_bg.png"
+        },
+        {
+          "name": "frame_land_black.png",
+          "path": "frames/vintage/frame_land_black.png"
+        },
+        {
+          "name": "frame_land_blue.png",
+          "path": "frames/vintage/frame_land_blue.png"
+        },
+        {
+          "name": "frame_land_br.png",
+          "path": "frames/vintage/frame_land_br.png"
+        },
+        {
+          "name": "frame_land_green.png",
+          "path": "frames/vintage/frame_land_green.png"
+        },
+        {
+          "name": "frame_land_gu.png",
+          "path": "frames/vintage/frame_land_gu.png"
+        },
+        {
+          "name": "frame_land_gw.png",
+          "path": "frames/vintage/frame_land_gw.png"
+        },
+        {
+          "name": "frame_land_multicolor.png",
+          "path": "frames/vintage/frame_land_multicolor.png"
+        },
+        {
+          "name": "frame_land_red.png",
+          "path": "frames/vintage/frame_land_red.png"
+        },
+        {
+          "name": "frame_land_rg.png",
+          "path": "frames/vintage/frame_land_rg.png"
+        },
+        {
+          "name": "frame_land_rw.png",
+          "path": "frames/vintage/frame_land_rw.png"
+        },
+        {
+          "name": "frame_land_ub.png",
+          "path": "frames/vintage/frame_land_ub.png"
+        },
+        {
+          "name": "frame_land_ur.png",
+          "path": "frames/vintage/frame_land_ur.png"
+        },
+        {
+          "name": "frame_land_wb.png",
+          "path": "frames/vintage/frame_land_wb.png"
+        },
+        {
+          "name": "frame_land_white.png",
+          "path": "frames/vintage/frame_land_white.png"
+        },
+        {
+          "name": "frame_land_wu.png",
+          "path": "frames/vintage/frame_land_wu.png"
+        },
+        {
+          "name": "frame_multicolor.png",
+          "path": "frames/vintage/frame_multicolor.png"
+        },
+        {
+          "name": "frame_red.png",
+          "path": "frames/vintage/frame_red.png"
+        },
+        {
+          "name": "frame_rg.png",
+          "path": "frames/vintage/frame_rg.png"
+        },
+        {
+          "name": "frame_rw.png",
+          "path": "frames/vintage/frame_rw.png"
+        },
+        {
+          "name": "frame_ub.png",
+          "path": "frames/vintage/frame_ub.png"
+        },
+        {
+          "name": "frame_ur.png",
+          "path": "frames/vintage/frame_ur.png"
+        },
+        {
+          "name": "frame_wb.png",
+          "path": "frames/vintage/frame_wb.png"
+        },
+        {
+          "name": "frame_white.png",
+          "path": "frames/vintage/frame_white.png"
+        },
+        {
+          "name": "frame_wu.png",
+          "path": "frames/vintage/frame_wu.png"
+        }
+      ]
+    }
+  ]
+}

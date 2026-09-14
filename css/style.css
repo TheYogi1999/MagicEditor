@@ -245,3 +245,9 @@ option{color:var(--text);background:#101822}
     overflow-x:auto;
   }
 }
+
+#frameStyleSelect{
+  font-weight:700;
+  border-color:rgba(104,170,255,.45);
+  background:#101a26;
+}
