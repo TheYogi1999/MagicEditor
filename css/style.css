@@ -179,3 +179,69 @@ option{color:var(--text);background:#101822}
   .editor-column{min-width:0;width:100%}
   .topbar{align-items:flex-start;position:static}
 }
+
+
+/* ---------- Organized sidebar ---------- */
+.sidebar-tabs{
+  position:sticky;
+  top:0;
+  z-index:8;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+  margin:-2px 0 12px;
+  padding:6px;
+  border:1px solid rgba(74,102,133,.42);
+  border-radius:13px;
+  background:rgba(10,15,22,.94);
+  backdrop-filter:blur(12px);
+  box-shadow:0 8px 24px rgba(0,0,0,.24);
+}
+.sidebar-tab{
+  min-height:34px;
+  padding:7px 6px;
+  border-radius:9px;
+  font-size:11.5px;
+  font-weight:700;
+  color:#aebed0;
+  background:transparent;
+  border:1px solid transparent;
+  box-shadow:none;
+}
+.sidebar-tab:hover{
+  transform:none;
+  background:rgba(104,170,255,.08);
+  border-color:rgba(104,170,255,.18);
+  box-shadow:none;
+}
+.sidebar-tab.active{
+  color:#fff;
+  background:linear-gradient(180deg,rgba(75,139,217,.95),rgba(44,94,157,.95));
+  border-color:rgba(121,184,255,.62);
+  box-shadow:0 5px 14px rgba(38,102,180,.24);
+}
+.controls .ui-panel{display:none;animation:uiPanelIn .16s ease-out}
+.controls .ui-panel.active{display:grid}
+@keyframes uiPanelIn{
+  from{opacity:.4;transform:translateY(3px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.subcard{
+  display:grid;
+  gap:9px;
+  margin-top:3px;
+  padding:11px;
+  border:1px solid rgba(69,95,125,.32);
+  border-radius:11px;
+  background:rgba(7,12,18,.25);
+}
+.controls section{margin-bottom:10px}
+.controls section > h2{margin-bottom:5px}
+.field-grid{align-items:start}
+.original-actions .button-link{width:100%}
+@media(max-width:760px){
+  .sidebar-tabs{
+    grid-template-columns:repeat(4,minmax(76px,1fr));
+    overflow-x:auto;
+  }
+}

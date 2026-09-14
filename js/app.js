@@ -1579,6 +1579,30 @@
     if (state.canvas) state.canvas.requestRenderAll();
   }
 
+
+  function initSidebarTabs() {
+    const tabs = [...document.querySelectorAll('[data-ui-tab]')];
+    const panels = [...document.querySelectorAll('[data-ui-group]')];
+    if (!tabs.length || !panels.length) return;
+
+    const activate = (group) => {
+      tabs.forEach(btn => btn.classList.toggle('active', btn.dataset.uiTab === group));
+      panels.forEach(panel => panel.classList.toggle('active', panel.dataset.uiGroup === group));
+      try { localStorage.setItem('mtg-card-editor-ui-tab', group); } catch (_) {}
+      const sidebar = document.querySelector('.panel.controls');
+      if (sidebar) sidebar.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    tabs.forEach(btn => btn.addEventListener('click', () => activate(btn.dataset.uiTab)));
+
+    let initial = 'card';
+    try {
+      const saved = localStorage.getItem('mtg-card-editor-ui-tab');
+      if (saved && tabs.some(t => t.dataset.uiTab === saved)) initial = saved;
+    } catch (_) {}
+    activate(initial);
+  }
+
   function wireEvents() {
     $('searchBtn').addEventListener('click', searchCard);
     $('cardSearch').addEventListener('keydown', e => { if (e.key === 'Enter') searchCard(); });
@@ -1741,6 +1765,7 @@
     await loadTemplateManifest();
     const canvasReady = initCanvas();
     wireEvents();
+    initSidebarTabs();
     refreshLayoutPresetSelect('builtin:standard');
     setQuickFrameStyle('new', false);
     setFlavorEnabled(true);
