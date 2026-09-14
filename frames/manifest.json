@@ -2,6 +2,88 @@
   "version": 1,
   "styles": [
     {
+      "id": "Borderless",
+      "label": "Borderless",
+      "frames": [
+        {
+          "name": "frame_artifact.png",
+          "path": "frames/Borderless/frame_artifact.png"
+        },
+        {
+          "name": "frame_BG.png",
+          "path": "frames/Borderless/frame_BG.png"
+        },
+        {
+          "name": "frame_black.png",
+          "path": "frames/Borderless/frame_black.png"
+        },
+        {
+          "name": "frame_blue.png",
+          "path": "frames/Borderless/frame_blue.png"
+        },
+        {
+          "name": "frame_BR.png",
+          "path": "frames/Borderless/frame_BR.png"
+        },
+        {
+          "name": "frame_colorless.png",
+          "path": "frames/Borderless/frame_colorless.png"
+        },
+        {
+          "name": "frame_green.png",
+          "path": "frames/Borderless/frame_green.png"
+        },
+        {
+          "name": "frame_GW.png",
+          "path": "frames/Borderless/frame_GW.png"
+        },
+        {
+          "name": "frame_land.png",
+          "path": "frames/Borderless/frame_land.png"
+        },
+        {
+          "name": "frame_land_GU.png",
+          "path": "frames/Borderless/frame_land_GU.png"
+        },
+        {
+          "name": "frame_multicolor.png",
+          "path": "frames/Borderless/frame_multicolor.png"
+        },
+        {
+          "name": "frame_red.png",
+          "path": "frames/Borderless/frame_red.png"
+        },
+        {
+          "name": "frame_RG.png",
+          "path": "frames/Borderless/frame_RG.png"
+        },
+        {
+          "name": "frame_RW.png",
+          "path": "frames/Borderless/frame_RW.png"
+        },
+        {
+          "name": "frame_UB.png",
+          "path": "frames/Borderless/frame_UB.png"
+        },
+        {
+          "name": "frame_UR.png",
+          "path": "frames/Borderless/frame_UR.png"
+        },
+        {
+          "name": "frame_WB.png",
+          "path": "frames/Borderless/frame_WB.png"
+        },
+        {
+          "name": "frame_white.png",
+          "path": "frames/Borderless/frame_white.png"
+        },
+        {
+          "name": "frame_WU.png",
+          "path": "frames/Borderless/frame_WU.png"
+        }
+      ]
+    },
+    {
       "id": "new",
       "label": "Neu",
       "frames": [
