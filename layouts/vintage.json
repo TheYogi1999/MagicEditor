@@ -1,17 +1,18 @@
 {
   "version": 1,
-  "name": "Mein Layout",
+  "name": "Vintage",
   "canvas": {
     "width": 1005,
     "height": 1407
   },
   "flavorEnabled": true,
+  "autoTextContrast": false,
   "ptBackground": {
-    "enabled": true
+    "enabled": false
   },
   "legendCrown": {
     "enabled": false,
-    "key": "M",
+    "key": "",
     "transform": null
   },
   "setSymbol": {
@@ -34,10 +35,10 @@
       "width": 650,
       "anchorRight": false,
       "fontSize": 40,
-      "fontFamily": "Arial",
+      "fontFamily": "MPlantin",
       "fontWeight": "700",
       "fontStyle": "normal",
-      "fill": "#111111",
+      "fill": "#f4f3ee",
       "textAlign": "left",
       "lineHeight": 1.16,
       "angle": 0,
@@ -46,15 +47,15 @@
       "opacity": 1
     },
     "type": {
-      "left": 110.88061000527802,
-      "top": 786.177645277638,
+      "left": 113.52883127813453,
+      "top": 791.4711284497228,
       "width": 720,
       "anchorRight": false,
-      "fontSize": 40,
-      "fontFamily": "Arial",
+      "fontSize": 35,
+      "fontFamily": "MPlantin",
       "fontWeight": "600",
       "fontStyle": "normal",
-      "fill": "#111111",
+      "fill": "#f4f3ee",
       "textAlign": "left",
       "lineHeight": 1.16,
       "angle": 0,
@@ -63,15 +64,15 @@
       "opacity": 1
     },
     "flavor": {
-      "left": 138.28904728808152,
-      "top": 1130.0024962149805,
+      "left": 139.61315792450984,
+      "top": 1135.2959793870652,
       "width": 720,
       "anchorRight": false,
-      "fontSize": 24,
+      "fontSize": 30,
       "fontFamily": "Arial",
       "fontWeight": "normal",
       "fontStyle": "italic",
-      "fill": "#222222",
+      "fill": "#111111",
       "textAlign": "left",
       "lineHeight": 1.05,
       "angle": 0,
@@ -84,11 +85,11 @@
       "top": 1271.1142698267913,
       "width": 120,
       "anchorRight": false,
-      "fontSize": 36,
-      "fontFamily": "Arial",
+      "fontSize": 50,
+      "fontFamily": "MPlantin",
       "fontWeight": "700",
       "fontStyle": "normal",
-      "fill": "#111111",
+      "fill": "#ffffff",
       "textAlign": "center",
       "lineHeight": 1.16,
       "angle": 0,
@@ -116,9 +117,9 @@
       "top": 865.7689641314371,
       "width": 720,
       "anchorRight": false,
-      "fontSize": 29,
-      "fontFamily": "Arial",
-      "fill": "#111111",
+      "fontSize": 40,
+      "fontFamily": "Matrix Bold",
+      "fill": "#000000",
       "textAlign": "left",
       "lineHeight": 1.08,
       "angle": 0,
@@ -128,10 +129,10 @@
     }
   },
   "artwork": {
-    "left": -461.15645514223195,
-    "top": 0,
-    "scaleX": 3.078774617067834,
-    "scaleY": 3.078774617067834,
+    "left": 71,
+    "top": 119.88178633975485,
+    "scaleX": 1.5113835376532399,
+    "scaleY": 1.5113835376532399,
     "angle": 0,
     "opacity": 1
   }
