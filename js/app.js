@@ -32,6 +32,8 @@
     setInfoCache: new Map(),
     legendCrown: null,
     legendCrownEnabled: true,
+    legendCrownForced: false,
+    legendCrownForcedKey: 'AUTO',
     legendCrownKey: '',
     ptBackground: null,
     ptBackgroundEnabled: true,
@@ -118,7 +120,18 @@
 
   function loadLegendCrownForCard(card) {
     if (!state.canvas) return;
-    const key = legendCrownKeyForCard(card);
+    let key = legendCrownKeyForCard(card);
+    if (state.legendCrownForced) {
+      if (state.legendCrownForcedKey && state.legendCrownForcedKey !== 'AUTO') {
+        key = state.legendCrownForcedKey;
+      } else if (!key) {
+        const colors = getOrderedCardColors(card, false);
+        if (!colors.length) key = /\bLand\b/i.test(String(card?.type_line || '')) ? 'L' : 'C';
+        else if (colors.length === 1) key = colors[0];
+        else if (colors.length === 2) key = canonicalPair(colors);
+        else key = 'M';
+      }
+    }
     state.legendCrownKey = key;
 
     if (state.legendCrown) {
@@ -1751,6 +1764,14 @@
       state.legendCrownEnabled = e.target.checked;
       if (state.legendCrownEnabled) loadLegendCrownForCard(state.localizedCard || state.cardBase);
       else removeLegendCrown();
+    });
+    $('legendCrownForceToggle').addEventListener('change', e => {
+      state.legendCrownForced = e.target.checked;
+      loadLegendCrownForCard(state.localizedCard || state.cardBase);
+    });
+    $('legendCrownForceSelect').addEventListener('change', e => {
+      state.legendCrownForcedKey = e.target.value || 'AUTO';
+      if (state.legendCrownForced) loadLegendCrownForCard(state.localizedCard || state.cardBase);
     });
     $('ptBackgroundToggle').addEventListener('change', e => {
       state.ptBackgroundEnabled = e.target.checked;
