@@ -2,9 +2,19 @@
   "version": 1,
   "layouts": [
     {
+      "id": "Standard",
+      "label": "Mein Layout",
+      "path": "layouts/Standard.json"
+    },
+    {
       "id": "standard",
       "label": "Mein Layout",
       "path": "layouts/standard.json"
+    },
+    {
+      "id": "Vintage",
+      "label": "Vintage",
+      "path": "layouts/Vintage.json"
     },
     {
       "id": "vintage",
