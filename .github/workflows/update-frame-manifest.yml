@@ -1,10 +1,11 @@
-name: Update frame manifest
+name: Update editor manifests
 
 on:
   push:
     branches: [ main ]
     paths:
       - "frames/**"
+      - "layouts/**"
       - "scripts/build_frame_manifest.py"
   workflow_dispatch:
 
@@ -12,24 +13,23 @@ permissions:
   contents: write
 
 jobs:
-  update-manifest:
+  update-manifests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build frame manifest
+      - name: Build frame and layout manifests
         run: python scripts/build_frame_manifest.py
 
-      - name: Commit manifest if changed
+      - name: Commit manifests if changed
         run: |
-          if git diff --quiet frames/manifest.json; then
-            echo "Manifest already up to date."
+          if git diff --quiet frames/manifest.json layouts/manifest.json; then
+            echo "Manifests already up to date."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add frames/manifest.json
-          git commit -m "Update frame manifest [skip ci]"
+          git add frames/manifest.json layouts/manifest.json
+          git commit -m "Update editor manifests [skip ci]"
           git push
-
