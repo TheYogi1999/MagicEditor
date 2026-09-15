@@ -28,6 +28,7 @@
     setSymbolEnabled: true,
     setSymbolSetCode: "msc",
     setSymbolRarity: "uncommon",
+    setSymbolRequestId: 0,
     setInfoCache: new Map(),
     legendCrown: null,
     legendCrownEnabled: true,
@@ -236,6 +237,7 @@
       localStorage.setItem(SET_SYMBOL_POS_KEY, JSON.stringify({
         left: obj.left, top: obj.top,
         scaleX: obj.scaleX, scaleY: obj.scaleY,
+        displaySize: Math.max(obj.getScaledWidth ? obj.getScaledWidth() : 62, obj.getScaledHeight ? obj.getScaledHeight() : 62),
         angle: obj.angle || 0,
         opacity: obj.opacity ?? 1
       }));
@@ -987,63 +989,73 @@
     const code = String(setCode || '').toLowerCase();
     if (!code) return false;
 
+    // Verhindert, dass ein langsamer alter Request ein neuer gewähltes Symbol überschreibt.
+    const requestId = ++state.setSymbolRequestId;
     const old = state.setSymbol;
-    const savedTransform = currentSetSymbolTransform();
-    const transform = savedTransform || { ...DEFAULT_SET_SYMBOL_LAYOUT };
+
+    // SVGs verschiedener Sets haben sehr unterschiedliche interne Maße. Darum speichern
+    // wir die SICHTBARE Größe statt scaleX/scaleY 1:1 auf das nächste SVG zu übertragen.
+    const fallback = readSavedSetSymbolTransform() || { ...DEFAULT_SET_SYMBOL_LAYOUT };
+    const oldVisibleSize = old ? Math.max(old.getScaledWidth(), old.getScaledHeight()) : null;
+    const oldCenter = old ? old.getCenterPoint() : null;
+    const desiredSize = preserveTransform && oldVisibleSize
+      ? oldVisibleSize
+      : (Number.isFinite(fallback.displaySize) ? fallback.displaySize : 62);
+    const desiredLeft = preserveTransform && oldCenter ? oldCenter.x : (fallback.left ?? DEFAULT_SET_SYMBOL_LAYOUT.left);
+    const desiredTop = preserveTransform && oldCenter ? oldCenter.y : (fallback.top ?? DEFAULT_SET_SYMBOL_LAYOUT.top);
+    const desiredAngle = preserveTransform && old ? (old.angle || 0) : (fallback.angle || 0);
+    const desiredOpacity = preserveTransform && old ? (old.opacity ?? 1) : (fallback.opacity ?? 1);
 
     const info = await getSetInfo(code);
+    if (requestId !== state.setSymbolRequestId) return false;
     if (!info?.icon_svg_uri) {
       setStatus(`Für Set ${code.toUpperCase()} wurde kein Set-Symbol gefunden.`, true);
       return false;
     }
 
     try {
-      const res = await fetch(info.icon_svg_uri);
+      const res = await fetch(info.icon_svg_uri, { cache:'force-cache' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const rawSvg = await res.text();
+      if (requestId !== state.setSymbolRequestId) return false;
       const coloredSvg = colorizeSetSvg(rawSvg, setSymbolColorForRarity(rarity));
 
       return await new Promise((resolve) => {
         fabric.loadSVGFromString(coloredSvg, (objects, options) => {
-          if (!objects || !objects.length) {
-            resolve(false);
-            return;
-          }
+          if (requestId !== state.setSymbolRequestId) { resolve(false); return; }
+          if (!objects || !objects.length) { resolve(false); return; }
+
           const group = fabric.util.groupSVGElements(objects, options);
-          const targetWidth = 62;
-          const baseScale = targetWidth / Math.max(group.width || 1, group.height || 1);
+          const naturalMax = Math.max(group.width || 1, group.height || 1);
+          const normalizedScale = desiredSize / naturalMax;
           group.set({
-            left: transform.left ?? DEFAULT_SET_SYMBOL_LAYOUT.left,
-            top: transform.top ?? DEFAULT_SET_SYMBOL_LAYOUT.top,
-            scaleX: Number.isFinite(transform.scaleX) ? transform.scaleX : baseScale,
-            scaleY: Number.isFinite(transform.scaleY) ? transform.scaleY : baseScale,
-            angle: transform.angle || 0,
-            opacity: transform.opacity ?? 1,
-            originX: 'center',
-            originY: 'center',
+            left: desiredLeft,
+            top: desiredTop,
+            scaleX: normalizedScale,
+            scaleY: normalizedScale,
+            angle: desiredAngle,
+            opacity: desiredOpacity,
+            originX: 'center', originY: 'center',
             name: '__set_symbol__',
-            cornerStyle: 'circle',
-            transparentCorners: false,
-            cornerSize: 12,
+            cornerStyle: 'circle', transparentCorners: false, cornerSize: 12,
             visible: !!state.setSymbolEnabled,
             selectable: !!state.setSymbolEnabled,
             evented: !!state.setSymbolEnabled,
             objectCaching: false
           });
 
-          if (old) state.canvas.remove(old);
+          if (old && old !== group) state.canvas.remove(old);
           state.setSymbol = group;
           state.canvas.add(group);
           saveSetSymbolTransform(group);
-          group.bringToFront();
           keepTextAboveArtwork();
-      if (state.setSymbol) state.setSymbol.bringToFront();
           group.bringToFront();
           state.canvas.requestRenderAll();
           resolve(true);
         });
       });
     } catch (err) {
+      if (requestId !== state.setSymbolRequestId) return false;
       console.warn('Set-Symbol konnte nicht geladen werden:', err);
       setStatus(`Set-Symbol konnte nicht geladen werden: ${err.message}`, true);
       return false;
@@ -1307,11 +1319,13 @@
       const hasEditionSet = Array.from($('setSymbolSelect').options).some(o => o.value === card.set);
       if (hasEditionSet) $('setSymbolSelect').value = card.set;
     }
-    state.setSymbolSetCode = $('setSymbolSelect')?.value || card.set || '';
+    state.setSymbolSetCode = card.set || $('setSymbolSelect')?.value || '';
     const rarityValue = ['common','uncommon','rare','mythic'].includes(card.rarity) ? card.rarity : 'common';
     if ($('raritySelect')) $('raritySelect').value = rarityValue;
     state.setSymbolRarity = rarityValue;
-    if (state.setSymbolEnabled) await refreshSetSymbolFromControls(true);
+    if (state.setSymbolEnabled && state.setSymbolSetCode) {
+      await buildSetSymbol(state.setSymbolSetCode, state.setSymbolRarity, true);
+    }
     const text = scryfallCardText(card, lang);
     updateAllText(text);
     updateOriginalCard(card, card.lang || lang);
