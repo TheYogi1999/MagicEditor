@@ -65,9 +65,23 @@
         <div class="subcard">
           <label style="display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;">
             <input id="legendCrownToggle" type="checkbox" checked style="width:auto;" />
-            Legendary Crown automatisch anzeigen
+            Legendary Crown anzeigen
           </label>
-          <p class="hint">Bei legendären Karten wird automatisch die passende, von dir angepasste Crown über dem Frame eingeblendet.</p>
+          <label style="display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;">
+            <input id="legendCrownForceToggle" type="checkbox" style="width:auto;" />
+            Crown forcen
+          </label>
+          <label for="legendCrownForceSelect">Crown</label>
+          <select id="legendCrownForceSelect">
+            <option value="AUTO">Automatisch nach Kartenfarbe</option>
+            <option value="W">Weiß</option><option value="U">Blau</option><option value="B">Schwarz</option>
+            <option value="R">Rot</option><option value="G">Grün</option><option value="C">Farblos</option>
+            <option value="A">Artefakt</option><option value="L">Land</option><option value="M">Mehrfarbig</option>
+            <option value="WU">WU</option><option value="WB">WB</option><option value="RW">RW</option>
+            <option value="GW">GW</option><option value="UB">UB</option><option value="UR">UR</option>
+            <option value="GU">GU</option><option value="BR">BR</option><option value="BG">BG</option><option value="RG">RG</option>
+          </select>
+          <p class="hint">Normalerweise erscheint die Crown nur bei legendären Karten. Mit „Crown forcen“ kannst du sie auch auf nichtlegendären Karten anzeigen und die Variante manuell wählen.</p>
         </div>
       </section>
 
