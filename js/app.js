@@ -1112,6 +1112,35 @@
   }
 
 
+  const repositoryLayouts = new Map();
+
+  async function loadLayoutManifest() {
+    repositoryLayouts.clear();
+    try {
+      const res = await fetch('layouts/manifest.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const manifest = await res.json();
+
+      for (const item of manifest.layouts || []) {
+        if (!item?.id || !item?.path) continue;
+        try {
+          const layoutRes = await fetch(item.path, { cache: 'no-store' });
+          if (!layoutRes.ok) throw new Error(`HTTP ${layoutRes.status}`);
+          const data = await layoutRes.json();
+          repositoryLayouts.set(String(item.id), {
+            id: String(item.id),
+            label: item.label || data.name || String(item.id),
+            data
+          });
+        } catch (err) {
+          console.warn(`Layout ${item.path} konnte nicht geladen werden.`, err);
+        }
+      }
+    } catch (err) {
+      console.warn('layouts/manifest.json konnte nicht geladen werden; eingebaute Layouts bleiben verfügbar.', err);
+    }
+  }
+
   function getSavedLayouts() {
     try {
       const raw = localStorage.getItem(SAVED_LAYOUTS_KEY);
@@ -1131,7 +1160,7 @@
     sel.innerHTML = '';
 
     const groupBuiltin = document.createElement('optgroup');
-    groupBuiltin.label = 'Eingebaut';
+    groupBuiltin.label = 'Standard';
     for (const [value, label] of [['builtin:standard','Standard'],['builtin:vintage','Vintage']]) {
       const opt = document.createElement('option');
       opt.value = value; opt.textContent = label;
@@ -1139,11 +1168,26 @@
     }
     sel.appendChild(groupBuiltin);
 
+    const repoItems = [...repositoryLayouts.values()]
+      .filter(x => !['standard','vintage'].includes(x.id.toLowerCase()))
+      .sort((a,b) => a.label.localeCompare(b.label, 'de'));
+    if (repoItems.length) {
+      const groupRepo = document.createElement('optgroup');
+      groupRepo.label = 'Layouts aus GitHub';
+      for (const item of repoItems) {
+        const opt = document.createElement('option');
+        opt.value = 'repo:' + item.id;
+        opt.textContent = item.label;
+        groupRepo.appendChild(opt);
+      }
+      sel.appendChild(groupRepo);
+    }
+
     const saved = getSavedLayouts();
     const names = Object.keys(saved).sort((a,b)=>a.localeCompare(b, 'de'));
     if (names.length) {
       const groupSaved = document.createElement('optgroup');
-      groupSaved.label = 'Gespeicherte Layouts';
+      groupSaved.label = 'Im Browser gespeichert';
       for (const name of names) {
         const opt = document.createElement('option');
         opt.value = 'saved:' + name;
@@ -1152,6 +1196,7 @@
       }
       sel.appendChild(groupSaved);
     }
+
     const exists = [...sel.options].some(o => o.value === previous);
     sel.value = exists ? previous : 'builtin:standard';
   }
@@ -1165,13 +1210,24 @@
       const key = value === 'builtin:vintage' ? 'vintage' : 'standard';
       $('layoutName').value = key === 'vintage' ? 'Vintage' : 'Standard';
 
-      const preset = JSON.parse(JSON.stringify(BUILTIN_LAYOUTS[key]));
+      const source = repositoryLayouts.get(key)?.data || BUILTIN_LAYOUTS[key];
+      const preset = JSON.parse(JSON.stringify(source));
       delete preset.artwork;
       applyLayout(preset);
 
       // Bereits geladenes Artwork bleibt exakt an seiner aktuellen Position/Skalierung.
       // Falls noch keines da ist, übernimmt loadCardArtwork später die normale Einpassung.
       state.canvas?.requestRenderAll();
+      return;
+    }
+
+    if (value.startsWith('repo:')) {
+      const id = value.slice(5);
+      const item = repositoryLayouts.get(id);
+      if (item?.data) {
+        $('layoutName').value = item.data.name || item.label || id;
+        applyLayout(JSON.parse(JSON.stringify(item.data)));
+      }
       return;
     }
 
@@ -1844,7 +1900,7 @@
   }
 
   async function init() {
-    await loadTemplateManifest();
+    await Promise.all([loadTemplateManifest(), loadLayoutManifest()]);
     const canvasReady = initCanvas();
     wireEvents();
     initSidebarTabs();
