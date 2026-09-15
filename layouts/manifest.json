@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "layouts": [
+    {
+      "id": "standard",
+      "label": "Mein Layout",
+      "path": "layouts/standard.json"
+    },
+    {
+      "id": "vintage",
+      "label": "Mein Layout",
+      "path": "layouts/vintage.json"
+    }
+  ]
+}
