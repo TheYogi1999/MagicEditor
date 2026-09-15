@@ -6,23 +6,31 @@
     "height": 1407
   },
   "flavorEnabled": true,
+  "autoTextContrast": false,
   "ptBackground": {
     "enabled": true
   },
   "legendCrown": {
     "enabled": true,
-    "key": "",
-    "transform": null
+    "key": "M",
+    "transform": {
+      "left": 0,
+      "top": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "angle": 0,
+      "opacity": 1
+    }
   },
   "setSymbol": {
     "enabled": true,
-    "setCode": "msc",
-    "rarity": "uncommon",
+    "setCode": "mh1",
+    "rarity": "mythic",
     "transform": {
-      "left": 886.5896774387934,
-      "top": 828.6460930828756,
-      "scaleX": 0.043398173896560824,
-      "scaleY": 0.043398173896560824,
+      "left": 884.09179455465,
+      "top": 833.0351141329504,
+      "scaleX": 2.717761662323947,
+      "scaleY": 2.717761662323947,
       "angle": 0,
       "opacity": 1
     }
@@ -30,11 +38,11 @@
   "fields": {
     "title": {
       "left": 78.3554763559591,
-      "top": 85.46956038206685,
+      "top": 76.20596483091867,
       "width": 650,
       "anchorRight": false,
-      "fontSize": 40,
-      "fontFamily": "Arial",
+      "fontSize": 53,
+      "fontFamily": "Matrix Bold",
       "fontWeight": "700",
       "fontStyle": "normal",
       "fill": "#111111",
@@ -46,15 +54,15 @@
       "opacity": 1
     },
     "type": {
-      "left": 82.47217272247437,
-      "top": 807.8223547223622,
+      "left": 81.14806208604625,
+      "top": 805.1756131363196,
       "width": 720,
       "anchorRight": false,
-      "fontSize": 40,
-      "fontFamily": "Arial",
+      "fontSize": 45,
+      "fontFamily": "Matrix Bold",
       "fontWeight": "600",
       "fontStyle": "normal",
-      "fill": "#111111",
+      "fill": "#000000",
       "textAlign": "left",
       "lineHeight": 1.16,
       "angle": 0,
@@ -68,10 +76,10 @@
       "width": 720,
       "anchorRight": false,
       "fontSize": 24,
-      "fontFamily": "Arial",
+      "fontFamily": "MPlantin",
       "fontWeight": "normal",
       "fontStyle": "italic",
-      "fill": "#222222",
+      "fill": "#111111",
       "textAlign": "left",
       "lineHeight": 1.05,
       "angle": 0,
@@ -80,12 +88,12 @@
       "opacity": 1
     },
     "pt": {
-      "left": 804.8806100052782,
-      "top": 1275.172652847677,
-      "width": 120,
+      "left": 803.5564993688504,
+      "top": 1264.5856865035073,
+      "width": 124.29999732971191,
       "anchorRight": false,
-      "fontSize": 36,
-      "fontFamily": "Arial",
+      "fontSize": 50,
+      "fontFamily": "MPlantin",
       "fontWeight": "700",
       "fontStyle": "normal",
       "fill": "#111111",
@@ -116,8 +124,8 @@
       "top": 905,
       "width": 720,
       "anchorRight": false,
-      "fontSize": 29,
-      "fontFamily": "Arial",
+      "fontSize": 32,
+      "fontFamily": "MPlantin",
       "fill": "#111111",
       "textAlign": "left",
       "lineHeight": 1.08,
