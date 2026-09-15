@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "name": "Vintage",
+  "canvas": {
+    "width": 1005,
+    "height": 1407
+  },
+  "flavorEnabled": true,
+  "autoTextContrast": false,
+  "ptBackground": {
+    "enabled": false
+  },
+  "legendCrown": {
+    "enabled": false,
+    "key": "",
+    "transform": null
+  },
+  "setSymbol": {
+    "enabled": false,
+    "setCode": "sld",
+    "rarity": "mythic",
+    "transform": {
+      "left": 903.7223095555328,
+      "top": 811.1605305746092,
+      "scaleX": 0.055667820431995314,
+      "scaleY": 0.055667820431995314,
+      "angle": 0,
+      "opacity": 1
+    }
+  },
+  "fields": {
+    "title": {
+      "left": 91.8833036334847,
+      "top": 67.88323395822842,
+      "width": 650,
+      "anchorRight": false,
+      "fontSize": 40,
+      "fontFamily": "MPlantin",
+      "fontWeight": "700",
+      "fontStyle": "normal",
+      "fill": "#f4f3ee",
+      "textAlign": "left",
+      "lineHeight": 1.16,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1
+    },
+    "type": {
+      "left": 113.52883127813453,
+      "top": 791.4711284497228,
+      "width": 720,
+      "anchorRight": false,
+      "fontSize": 35,
+      "fontFamily": "MPlantin",
+      "fontWeight": "600",
+      "fontStyle": "normal",
+      "fill": "#f4f3ee",
+      "textAlign": "left",
+      "lineHeight": 1.16,
+      "angle": 0,
+      "scaleX": 1.051199210993726,
+      "scaleY": 1.051199210993726,
+      "opacity": 1
+    },
+    "flavor": {
+      "left": 139.61315792450984,
+      "top": 1135.2959793870652,
+      "width": 720,
+      "anchorRight": false,
+      "fontSize": 30,
+      "fontFamily": "Arial",
+      "fontWeight": "normal",
+      "fontStyle": "italic",
+      "fill": "#111111",
+      "textAlign": "left",
+      "lineHeight": 1.05,
+      "angle": 0,
+      "scaleX": 1.0280935515165324,
+      "scaleY": 1.0280935515165324,
+      "opacity": 1
+    },
+    "pt": {
+      "left": 807.5861754607832,
+      "top": 1271.1142698267913,
+      "width": 120,
+      "anchorRight": false,
+      "fontSize": 50,
+      "fontFamily": "MPlantin",
+      "fontWeight": "700",
+      "fontStyle": "normal",
+      "fill": "#ffffff",
+      "textAlign": "center",
+      "lineHeight": 1.16,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1
+    },
+    "mana": {
+      "left": 924.5278272775256,
+      "top": 67.53043961793313,
+      "width": 190.40000000000003,
+      "anchorRight": true,
+      "fontSize": 34,
+      "fontFamily": "Arial",
+      "fill": "#111111",
+      "textAlign": "right",
+      "lineHeight": 1.08,
+      "angle": 0,
+      "scaleX": 1.193944313912175,
+      "scaleY": 1.193944313912175,
+      "opacity": 1
+    },
+    "rules": {
+      "left": 120.70287182729862,
+      "top": 865.7689641314371,
+      "width": 720,
+      "anchorRight": false,
+      "fontSize": 40,
+      "fontFamily": "Matrix Bold",
+      "fill": "#000000",
+      "textAlign": "left",
+      "lineHeight": 1.08,
+      "angle": 0,
+      "scaleX": 1.0428159108622534,
+      "scaleY": 1.0428159108622534,
+      "opacity": 1
+    }
+  },
+  "artwork": {
+    "left": 71,
+    "top": 119.88178633975485,
+    "scaleX": 1.5113835376532399,
+    "scaleY": 1.5113835376532399,
+    "angle": 0,
+    "opacity": 1
+  }
+}
