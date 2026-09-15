@@ -576,8 +576,8 @@
       shadow:new fabric.Shadow({
         color:'rgba(0,0,0,0.75)',
         blur:2,
-        offsetX:-2,
-        offsetY:3,
+        offsetX:-4,
+        offsetY:6,
         affectStroke:false
       })
     });
