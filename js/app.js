@@ -574,9 +574,9 @@
       // Dezenter Schatten wie bei gedruckten Mana-Symbolen: leicht nach links/unten.
       // Der Schatten liegt am kompletten Symbol, nicht als schwarzer Rand auf der Mana-Blase.
       shadow:new fabric.Shadow({
-        color:'rgba(0,0,0,0.38)',
-        blur:3,
-        offsetX:-2,
+        color:'rgba(0,0,0,0.30)',
+        blur:6,
+        offsetX:-3,
         offsetY:2,
         affectStroke:false
       })
