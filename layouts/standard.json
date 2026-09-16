@@ -1,45 +1,52 @@
 {
   "version": 1,
-  "name": "Vintage",
+  "name": "Standard",
   "canvas": {
     "width": 1005,
     "height": 1407
   },
-  "preferredFrameStyle": "vintage",
+  "preferredFrameStyle": "new",
   "flavorEnabled": true,
   "autoTextContrast": false,
   "ptBackground": {
-    "enabled": false
+    "enabled": true
   },
   "legendCrown": {
-    "enabled": false,
+    "enabled": true,
     "key": "M",
-    "transform": null
+    "transform": {
+      "left": 0,
+      "top": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "angle": 0,
+      "opacity": 1
+    }
   },
   "setSymbol": {
-    "enabled": false,
+    "enabled": true,
     "setCode": "prm",
     "rarity": "rare",
     "transform": {
-      "left": 903.7223095555328,
-      "top": 811.1605305746092,
-      "scaleX": 0.055667820431995314,
-      "scaleY": 0.055667820431995314,
+      "left": 894.4473650915219,
+      "top": 829.7161586951611,
+      "scaleX": 0.055722181202835015,
+      "scaleY": 0.055722181202835015,
       "angle": 0,
       "opacity": 1
     }
   },
   "fields": {
     "title": {
-      "left": 111.75818462779367,
-      "top": 67.88323395822842,
+      "left": 85.25834330204827,
+      "top": 82.4626560529478,
       "width": 650,
       "anchorRight": false,
-      "fontSize": 40,
+      "fontSize": 45,
       "fontFamily": "MPlantin",
       "fontWeight": "700",
       "fontStyle": "normal",
-      "fill": "#f4f3ee",
+      "fill": "#000000",
       "textAlign": "left",
       "lineHeight": 1.16,
       "angle": 0,
@@ -48,15 +55,15 @@
       "opacity": 1
     },
     "type": {
-      "left": 113.52883127813453,
-      "top": 787.4949224238901,
+      "left": 81.72902168724016,
+      "top": 814.0029625961072,
       "width": 720,
       "anchorRight": false,
       "fontSize": 35,
       "fontFamily": "MPlantin",
       "fontWeight": "600",
       "fontStyle": "normal",
-      "fill": "#f4f3ee",
+      "fill": "#000000",
       "textAlign": "left",
       "lineHeight": 1.16,
       "angle": 0,
@@ -82,8 +89,8 @@
       "opacity": 1
     },
     "flavor": {
-      "left": 139.61315792450984,
-      "top": 1135.2959793870652,
+      "left": 87.93846733930644,
+      "top": 1160.4786175506717,
       "width": 720,
       "anchorRight": false,
       "fontSize": 30,
@@ -100,14 +107,14 @@
     },
     "pt": {
       "left": 807.5861754607832,
-      "top": 1271.1142698267913,
+      "top": 1265.8126617923479,
       "width": 120,
       "anchorRight": false,
       "fontSize": 50,
       "fontFamily": "MPlantin",
       "fontWeight": "700",
       "fontStyle": "normal",
-      "fill": "#ffffff",
+      "fill": "#000000",
       "textAlign": "center",
       "lineHeight": 1.16,
       "angle": 0,
@@ -116,8 +123,8 @@
       "opacity": 1
     },
     "mana": {
-      "left": 892.7280176866311,
-      "top": 64.87963560071141,
+      "left": 929.8277955426745,
+      "top": 81.12931341447802,
       "width": 190.40000000000003,
       "anchorRight": true,
       "fontSize": 34,
@@ -127,16 +134,16 @@
       "textAlign": "right",
       "lineHeight": 1.08,
       "angle": 0,
-      "scaleX": 1.193944313912175,
-      "scaleY": 1.193944313912175,
+      "scaleX": 1.294720740341884,
+      "scaleY": 1.294720740341884,
       "opacity": 1
     },
     "rules": {
-      "left": 120.70287182729862,
-      "top": 865.7689641314371,
+      "left": 82.27810190496783,
+      "top": 898.9040143467083,
       "width": 720,
       "anchorRight": false,
-      "fontSize": 40,
+      "fontSize": 35,
       "fontFamily": "MPlantin",
       "fontStyle": "normal",
       "fill": "#000000",
