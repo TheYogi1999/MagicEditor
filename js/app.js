@@ -281,6 +281,18 @@
     state.canvas.setWidth(CANVAS_W);
     state.canvas.setHeight(CANVAS_H);
 
+    // Artwork soll mit einem einzigen Klick greifbar sein, auch wenn der
+    // nicht-evented Frame/Overlays darüber liegen. Klickt man auf eine freie
+    // Bildstelle, wird das Artwork sofort aktiviert und derselbe Drag bewegt es.
+    state.canvas.on('mouse:down:before', opt => {
+      if (!state.artwork || opt.target) return;
+      const p = state.canvas.getPointer(opt.e);
+      if (!state.artwork.containsPoint(new fabric.Point(p.x, p.y))) return;
+      state.canvas.setActiveObject(state.artwork);
+      state.artwork.setCoords();
+      state.canvas.requestRenderAll();
+    });
+
     state.canvas.on('selection:created', syncSelectionControls);
     state.canvas.on('selection:updated', syncSelectionControls);
     state.canvas.on('object:modified', syncBoundInputFromObject);
