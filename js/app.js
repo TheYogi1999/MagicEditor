@@ -548,7 +548,7 @@
       fillCircle(neutral);
       // Einzelnes {P}: Mana-Font-Glyphe hat intern mehr Leerraum als Farbsymbole.
       // Daher optisch auf dieselbe sichtbare Größe wie die 78er Einzel-Mana skalieren.
-      if(!drawGlyph('P',50,50,92)) fallback('Φ',50,50,60);
+      if(!drawGlyph('P',50,50,88)) fallback('Φ',50,50,58);
     } else if(raw==='T' || raw==='Q'){
       fillCircle(raw==='Q' ? '#111111' : neutral);
       const fg=raw==='Q' ? '#fff' : '#111';
