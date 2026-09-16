@@ -543,7 +543,7 @@
       if(!drawGlyph(raw,50,50,78)) fallback(raw,50,50,42);
     } else if(/^\d+$/.test(raw) || ['X','Y','Z','E','CHAOS','∞'].includes(raw)){
       fillCircle(neutral);
-      if(!drawGlyph(raw,50,50,60)) fallback(raw,50,50,raw.length>2?27:40);
+      if(!drawGlyph(raw,50,50,raw==='E'?78:60)) fallback(raw,50,50,raw==='E'?42:(raw.length>2?27:40));
     } else if(raw==='T' || raw==='Q'){
       fillCircle(raw==='Q' ? '#111111' : neutral);
       const fg=raw==='Q' ? '#fff' : '#111';
@@ -562,12 +562,12 @@
       if(ps.length>=2 && second==='P'){
         // {U/P}: volle U-Farbe, großes Phyrexian-Zeichen.
         fillCircle(MANA_COLORS[first]?color(first):neutral);
-        if(!drawGlyph('P',50,50,72)) fallback('Φ',50,50,48);
+        if(!drawGlyph('P',50,50,78)) fallback('Φ',50,50,52);
       } else if(ps.length>=2 && third==='P'){
         // {W/U/P}: echter Zwei-Farb-Split plus großes Phyrexian-Zeichen.
         drawDiagonalSplit(MANA_COLORS[first]?color(first):neutral,
                           MANA_COLORS[second]?color(second):neutral);
-        if(!drawGlyph('P',50,50,68)) fallback('Φ',50,50,46);
+        if(!drawGlyph('P',50,50,78)) fallback('Φ',50,50,52);
       } else if(ps.length>=2){
         // {R/B}, {W/U}, {2/G}, {C/U} usw.
         const firstFill=MANA_COLORS[first]?color(first):neutral;
