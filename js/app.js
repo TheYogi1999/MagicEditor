@@ -621,7 +621,7 @@
       top:old.top,angle:old.angle||0,scaleX:old.scaleX||1,scaleY:old.scaleY||1,opacity:old.opacity??1,
       fontSize:old.editorFontSize,fontFamily:old.editorFontFamily,width:old.editorWidth,fill:old.editorFill,
       lineHeight:old.editorLineHeight,textAlign:old.editorTextAlign,anchorRight:key==='mana'
-    }:{...defaultLayout[key],fontFamily:'Arial'};
+    }:{...defaultLayout[key]};
     const cfg={...base,...(overrideCfg||{})};
     cfg.fontFamily=cfg.fontFamily||'Arial';cfg.fontSize=Number(cfg.fontSize||28);cfg.width=Number(cfg.width||600);cfg.lineHeight=Number(cfg.lineHeight||1.08);
     await ensureFontLoaded(cfg.fontFamily);
