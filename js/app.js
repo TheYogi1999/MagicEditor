@@ -1940,6 +1940,8 @@
       // Beim Start wirklich dieselbe Standard-Vorlage anwenden, die auch im Dropdown
       // ausgewählt ist. Falls layouts/standard.json vorhanden ist, hat sie Vorrang vor
       // dem eingebauten Fallback. So ist die erste geladene Karte sofort korrekt.
+      await ensureFontLoaded('Matrix Bold');
+      await ensureFontLoaded('MPlantin');
       await applyLayoutPresetValue('builtin:standard');
       const tpl = state.templates[state.currentTemplateIndex];
       if (tpl) loadTemplate(tpl.file, tpl.name);
