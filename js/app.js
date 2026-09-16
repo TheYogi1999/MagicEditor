@@ -609,17 +609,31 @@
   function tokenizeRichText(text){
     const src=String(text||'').replace(/\r\n?/g,'\n');
     const out=[];
-    // Scryfall behält Oracle-Zeilenumbrüche bereits in oracle_text/printed_text.
-    // Klammer-Erklärungstext wird als eigener italic-Bereich markiert, Mana-Symbole bleiben Symbole.
-    const parts=src.split(/(\{[^}]+\}|\n|\([^\n()]*\))/g).filter(Boolean);
-    for(const part of parts){
-      if(part==='\n'){out.push({type:'newline',value:'\n',italic:false});continue;}
-      if(/^\{[^}]+\}$/.test(part)){out.push({type:'symbol',value:part,italic:false});continue;}
-      const italic=/^\([^\n()]*\)$/.test(part);
-      // Whitespace separat halten, damit Wrapping und originale Absatzumbrüche sauber bleiben.
-      for(const bit of part.split(/(\s+)/g).filter(Boolean)){
-        out.push({type:'text',value:bit,italic});
+    let italicDepth=0;
+    // Zeichenweise parsen: So bleiben {T}, {U}, {U/P} usw. auch innerhalb
+    // von Reminder-Text in (...) echte Mana-Symbole, während nur Text/Klammern kursiv werden.
+    const re=/(\{[^}]+\}|\n|[()]|\s+|[^{}()\s\n]+)/g;
+    for(const match of src.matchAll(re)){
+      const part=match[0];
+      if(part==='\n'){
+        out.push({type:'newline',value:'\n',italic:false});
+        continue;
       }
+      if(/^\{[^}]+\}$/.test(part)){
+        out.push({type:'symbol',value:part,italic:false});
+        continue;
+      }
+      if(part==='('){
+        out.push({type:'text',value:part,italic:true});
+        italicDepth++;
+        continue;
+      }
+      if(part===')'){
+        out.push({type:'text',value:part,italic:italicDepth>0});
+        italicDepth=Math.max(0,italicDepth-1);
+        continue;
+      }
+      out.push({type:'text',value:part,italic:italicDepth>0});
     }
     return out;
   }
