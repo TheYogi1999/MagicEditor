@@ -606,8 +606,24 @@
     return img;
   }
 
-  function tokenizeRichText(text){return String(text||'').split(/(\{[^}]+\}|\n|\s+)/g).filter(Boolean).map(v=>({type:/^\{[^}]+\}$/.test(v)?'symbol':(v==='\n'?'newline':'text'),value:v}));}
-  function measureTextWidth(text,size,family,weight='normal'){const c=measureTextWidth.canvas||(measureTextWidth.canvas=document.createElement('canvas'));const ctx=c.getContext('2d');ctx.font=`${weight} ${size}px "${family}"`;return ctx.measureText(text).width;}
+  function tokenizeRichText(text){
+    const src=String(text||'').replace(/\r\n?/g,'\n');
+    const out=[];
+    // Scryfall behält Oracle-Zeilenumbrüche bereits in oracle_text/printed_text.
+    // Klammer-Erklärungstext wird als eigener italic-Bereich markiert, Mana-Symbole bleiben Symbole.
+    const parts=src.split(/(\{[^}]+\}|\n|\([^\n()]*\))/g).filter(Boolean);
+    for(const part of parts){
+      if(part==='\n'){out.push({type:'newline',value:'\n',italic:false});continue;}
+      if(/^\{[^}]+\}$/.test(part)){out.push({type:'symbol',value:part,italic:false});continue;}
+      const italic=/^\([^\n()]*\)$/.test(part);
+      // Whitespace separat halten, damit Wrapping und originale Absatzumbrüche sauber bleiben.
+      for(const bit of part.split(/(\s+)/g).filter(Boolean)){
+        out.push({type:'text',value:bit,italic});
+      }
+    }
+    return out;
+  }
+  function measureTextWidth(text,size,family,weight='normal',style='normal'){const c=measureTextWidth.canvas||(measureTextWidth.canvas=document.createElement('canvas'));const ctx=c.getContext('2d');ctx.font=`${style} ${weight} ${size}px "${family}"`;return ctx.measureText(text).width;}
   async function rebuildRichField(key,text,overrideCfg=null){
     if(!state.canvas)return;
     const old=state.fields[key];
@@ -630,7 +646,7 @@
     let cw=0;
     for(const tok of tokens){
       if(tok.type==='newline'){lines.push([]);cw=0;continue;}
-      const w=tok.type==='symbol'?iconSize:measureTextWidth(tok.value,cfg.fontSize,cfg.fontFamily,key==='mana'?'bold':'normal');
+      const w=tok.type==='symbol'?iconSize:measureTextWidth(tok.value,cfg.fontSize,cfg.fontFamily,key==='mana'?'bold':'normal',tok.italic?'italic':'normal');
       if(key!=='mana'&&cw>0&&cw+w>maxWidth&&tok.value.trim()){
         lines.push([]);cw=0;if(tok.type==='text'&&/^\s+$/.test(tok.value))continue;
       }
@@ -649,7 +665,7 @@
           const img=makeManaFabricObject(tok.value,iconSize);
           if(img){img.set({left:x,top:y+Math.max(0,(lineH-iconSize)/2),selectable:false,evented:false,originX:'left',originY:'top'});pieces.push(img);}
           else pieces.push(new fabric.Text(tok.value,{left:x,top:y,fontSize:cfg.fontSize*.72,fontFamily:cfg.fontFamily,fill:cfg.fill||'#111',selectable:false,evented:false}));
-        }else pieces.push(new fabric.Text(tok.value,{left:x,top:y,fontSize:cfg.fontSize,fontFamily:cfg.fontFamily,fill:cfg.fill||'#111111',fontWeight:key==='mana'?'bold':'normal',selectable:false,evented:false,originX:'left',originY:'top'}));
+        }else pieces.push(new fabric.Text(tok.value,{left:x,top:y,fontSize:cfg.fontSize,fontFamily:cfg.fontFamily,fill:cfg.fill||'#111111',fontWeight:key==='mana'?'bold':'normal',fontStyle:tok.italic?'italic':'normal',selectable:false,evented:false,originX:'left',originY:'top'}));
         x+=tok.width;
       }
     }
@@ -891,7 +907,7 @@
       title: (usePrinted && face.printed_name) || face.name || card.name || '',
       mana: face.mana_cost || card.mana_cost || '',
       type: (usePrinted && face.printed_type_line) || face.type_line || card.type_line || '',
-      rules: (usePrinted && face.printed_text) || face.oracle_text || card.oracle_text || '',
+      rules: String((usePrinted && face.printed_text) || face.oracle_text || card.oracle_text || '').replace(/\r\n?/g, '\n'),
       flavor: face.flavor_text || card.flavor_text || '',
       pt: getPT(face, card),
     };
