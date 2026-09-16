@@ -941,8 +941,11 @@
   function keepTextAboveArtwork() {
     if (state.artwork) state.artwork.sendToBack();
     if (state.frame) state.frame.bringToFront();
+    // Overlays liegen vor dem Frame. HoloStamp muss explizit nach vorne,
+    // sonst kann ein später geladenes Frame ihn vollständig verdecken.
     if (state.legendCrown) state.legendCrown.bringToFront();
     if (state.ptBackground) state.ptBackground.bringToFront();
+    if (state.holoStamp) state.holoStamp.bringToFront();
     Object.values(state.fields).forEach(obj => obj.bringToFront());
     if (state.manaGroup) state.manaGroup.bringToFront();
     if (state.rulesGroup) state.rulesGroup.bringToFront();
@@ -1711,6 +1714,7 @@
         setSetSymbolEnabled(state.setSymbolEnabled);
       });
     }
+    loadHoloStampForCard(state.localizedCard || state.cardBase);
     state.canvas.requestRenderAll();
     if(typeof data.autoTextContrast==='boolean') setAutoTextContrast(data.autoTextContrast); else scheduleAutoTextContrast(100);
     setStatus(`Layout „${data.name || 'geladen'}“ angewendet`);
