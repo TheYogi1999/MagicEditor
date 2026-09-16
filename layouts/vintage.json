@@ -5,6 +5,7 @@
     "width": 1005,
     "height": 1407
   },
+  "preferredFrameStyle": "vintage",
   "flavorEnabled": true,
   "autoTextContrast": false,
   "ptBackground": {
@@ -12,7 +13,7 @@
   },
   "legendCrown": {
     "enabled": false,
-    "key": "",
+    "key": "M",
     "transform": null
   },
   "setSymbol": {
@@ -30,8 +31,8 @@
   },
   "fields": {
     "title": {
-      "left": 91.8833036334847,
-      "top": 67.88323395822842,
+      "left": 109.10820049521922,
+      "top": 66.55783194961757,
       "width": 650,
       "anchorRight": false,
       "fontSize": 40,
@@ -47,7 +48,7 @@
       "opacity": 1
     },
     "type": {
-      "left": 113.52883127813453,
+      "left": 112.20383921184725,
       "top": 791.4711284497228,
       "width": 720,
       "anchorRight": false,
@@ -61,6 +62,23 @@
       "angle": 0,
       "scaleX": 1.051199210993726,
       "scaleY": 1.051199210993726,
+      "opacity": 1
+    },
+    "nickname": {
+      "left": 145.74742117694637,
+      "top": 162.63537675775513,
+      "width": 718.4672301799791,
+      "anchorRight": false,
+      "fontSize": 24,
+      "fontFamily": "Matrix Bold",
+      "fontWeight": "700",
+      "fontStyle": "normal",
+      "fill": "#ffffff",
+      "textAlign": "center",
+      "lineHeight": 1,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1,
       "opacity": 1
     },
     "flavor": {
@@ -98,12 +116,13 @@
       "opacity": 1
     },
     "mana": {
-      "left": 924.5278272775256,
-      "top": 67.53043961793313,
+      "left": 892.7280176866312,
+      "top": 66.20503760932228,
       "width": 190.40000000000003,
       "anchorRight": true,
       "fontSize": 34,
       "fontFamily": "Arial",
+      "fontStyle": "normal",
       "fill": "#111111",
       "textAlign": "right",
       "lineHeight": 1.08,
@@ -118,7 +137,8 @@
       "width": 720,
       "anchorRight": false,
       "fontSize": 40,
-      "fontFamily": "Matrix Bold",
+      "fontFamily": "MPlantin",
+      "fontStyle": "normal",
       "fill": "#000000",
       "textAlign": "left",
       "lineHeight": 1.08,
@@ -129,10 +149,10 @@
     }
   },
   "artwork": {
-    "left": 71,
-    "top": 119.88178633975485,
-    "scaleX": 1.5113835376532399,
-    "scaleY": 1.5113835376532399,
+    "left": 89.5498889280218,
+    "top": 152.205272138481,
+    "scaleX": 1.400974025974026,
+    "scaleY": 1.400974025974026,
     "angle": 0,
     "opacity": 1
   }
