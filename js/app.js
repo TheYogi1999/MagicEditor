@@ -1233,6 +1233,11 @@
       const source = repositoryLayouts.get(key)?.data || BUILTIN_LAYOUTS[key];
       const preset = JSON.parse(JSON.stringify(source));
       delete preset.artwork;
+      // Abwärtskompatibilität für bestehende standard/vintage.json:
+      // solange dort noch kein preferredFrameStyle gespeichert ist.
+      if (!preset.preferredFrameStyle) {
+        preset.preferredFrameStyle = key === 'vintage' ? 'vintage' : 'new';
+      }
       applyLayout(preset);
 
       // Bereits geladenes Artwork bleibt exakt an seiner aktuellen Position/Skalierung.
@@ -1502,6 +1507,9 @@
       version: 1,
       name: $('layoutName').value.trim() || 'Layout',
       canvas: { width: CANVAS_W, height: CANVAS_H },
+      // Verknüpft das Layout mit dem aktuell gewählten Frame-Stil.
+      // Beim späteren Laden des Layouts wird dieser Stil automatisch wieder aktiviert.
+      preferredFrameStyle: currentFrameStyle || 'new',
       flavorEnabled: $('flavorToggle')?.checked !== false,
       autoTextContrast: !!state.autoTextContrast,
       ptBackground: {
@@ -1536,6 +1544,11 @@
   }
 
   function applyLayout(data) {
+    // Optionaler Layout→Frame-Link. Alte Layout-Dateien ohne preferredFrameStyle
+    // bleiben vollständig kompatibel.
+    if (data?.preferredFrameStyle) {
+      setQuickFrameStyle(String(data.preferredFrameStyle), true);
+    }
     const fields = data.fields || data;
     Object.entries(fields).forEach(([key, cfg]) => {
       const obj = state.fields[key];
