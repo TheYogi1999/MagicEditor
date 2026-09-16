@@ -83,6 +83,30 @@
           </select>
           <p class="hint">Normalerweise erscheint die Crown nur bei legendären Karten. Mit „Crown forcen“ kannst du sie auch auf nichtlegendären Karten anzeigen und die Variante manuell wählen.</p>
         </div>
+
+        <div class="subcard">
+          <label style="display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;">
+            <input id="holoStampToggle" type="checkbox" checked style="width:auto;" />
+            HoloStamp anzeigen
+          </label>
+          <label style="display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;">
+            <input id="holoStampForceToggle" type="checkbox" style="width:auto;" />
+            HoloStamp forcen
+          </label>
+          <label for="holoStampForceSelect">HoloStamp</label>
+          <select id="holoStampForceSelect">
+            <option value="AUTO">Automatisch nach Kartenfarbe/-typ</option>
+            <option value="W">Weiß</option><option value="U">Blau</option><option value="B">Schwarz</option>
+            <option value="R">Rot</option><option value="G">Grün</option><option value="C">Farblos</option>
+            <option value="A">Artefakt</option><option value="L">Land</option><option value="M">Mehrfarbig</option>
+            <option value="WU">WU</option><option value="WB">WB</option><option value="RW">RW</option>
+            <option value="GW">GW</option><option value="UB">UB</option><option value="UR">UR</option>
+            <option value="GU">GU</option><option value="BR">BR</option><option value="BG">BG</option><option value="RG">RG</option>
+            <option value="Gray">Gray</option><option value="Acorn">Acorn</option>
+            <option value="Alchemy">Alchemy</option><option value="Plane">Plane</option>
+          </select>
+          <p class="hint">Auto wählt den HoloStamp anhand von Kartenfarbe und Kartentyp. Mit „HoloStamp forcen“ kannst du jede Variante manuell erzwingen.</p>
+        </div>
       </section>
 
       <section class="ui-panel" data-ui-group="design">
