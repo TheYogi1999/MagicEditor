@@ -540,7 +540,7 @@
       // Einzelne Mana-Glyphen (z. B. {W}, {U}, {B}, {R}, {G}, {C})
       // bewusst etwas größer zeichnen. Split-/Hybrid-Mana wie {R/U}
       // wird weiter unten separat gerendert und bleibt unverändert.
-      if(!drawGlyph(raw,50,50,64)) fallback(raw,50,50,35);
+      if(!drawGlyph(raw,50,50,70)) fallback(raw,50,50,38);
     } else if(/^\d+$/.test(raw) || ['X','Y','Z','E','CHAOS','∞'].includes(raw)){
       fillCircle(neutral);
       if(!drawGlyph(raw,50,50,60)) fallback(raw,50,50,raw.length>2?27:40);
