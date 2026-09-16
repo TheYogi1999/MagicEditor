@@ -40,6 +40,9 @@
     holoStampForced: false,
     holoStampForcedKey: 'AUTO',
     holoStampKey: '',
+    nicknameOverlay: null,
+    nicknameEnabled: false,
+    nicknameKey: '',
     ptBackground: null,
     ptBackgroundEnabled: true,
     ptBackgroundKey: '',
@@ -55,6 +58,7 @@
     mana: { left: 928.5861754607834, top: 83.76397170147631, width: 155, anchorRight: true, fontSize: 34, fontFamily: "Arial", fill: "#111111", textAlign: "right", lineHeight: 1.08, angle: 0, scaleX: 1.193944313912175, scaleY: 1.193944313912175, opacity: 1 },
     type: { left: 82.47217272247437, top: 807.8223547223622, width: 720, anchorRight: false, fontSize: 40, fontFamily: "Arial", fontWeight: "600", fontStyle: "normal", fill: "#111111", textAlign: "left", lineHeight: 1.16, angle: 0, scaleX: 1.051199210993726, scaleY: 1.051199210993726, opacity: 1 },
     rules: { left: 95, top: 905, width: 720, anchorRight: false, fontSize: 29, fontFamily: "Arial", fill: "#111111", textAlign: "left", lineHeight: 1.08, angle: 0, scaleX: 1.141719483084871, scaleY: 1.141719483084871, opacity: 1 },
+    nickname: { left: 95, top: 46, width: 815, anchorRight: false, fontSize: 24, fontFamily: "Matrix Bold", fontWeight: "700", fontStyle: "normal", fill: "#111111", textAlign: "center", lineHeight: 1.0, angle: 0, scaleX: 1, scaleY: 1, opacity: 1 },
     flavor: { left: 95, top: 1153, width: 720, anchorRight: false, fontSize: 24, fontFamily: "Arial", fontWeight: "normal", fontStyle: "italic", fill: "#222222", textAlign: "left", lineHeight: 1.05, angle: 0, scaleX: 1.1392599030507877, scaleY: 1.1392599030507877, opacity: 1 },
     pt: { left: 790, top: 1240, width: 120, anchorRight: false, fontSize: 36, fontFamily: "Arial", fontWeight: "700", fontStyle: "normal", fill: "#111111", textAlign: "center", lineHeight: 1.16, angle: 0, scaleX: 1, scaleY: 1, opacity: 1 },
   };
@@ -72,6 +76,7 @@
 
   const BUILTIN_LEGEND_CROWNS = {"A": "overlays/crowns/A.png", "B": "overlays/crowns/B.png", "BG": "overlays/crowns/BG.png", "BR": "overlays/crowns/BR.png", "C": "overlays/crowns/C.png", "G": "overlays/crowns/G.png", "GU": "overlays/crowns/GU.png", "GW": "overlays/crowns/GW.png", "L": "overlays/crowns/L.png", "M": "overlays/crowns/M.png", "R": "overlays/crowns/R.png", "RG": "overlays/crowns/RG.png", "RW": "overlays/crowns/RW.png", "U": "overlays/crowns/U.png", "UB": "overlays/crowns/UB.png", "UR": "overlays/crowns/UR.png", "W": "overlays/crowns/W.png", "WB": "overlays/crowns/WB.png", "WU": "overlays/crowns/WU.png"};
   const BUILTIN_HOLO_STAMPS = {"A":"overlays/HoloStamps/HoloStamp_A.png","Acorn":"overlays/HoloStamps/HoloStamp_Acorn.png","Alchemy":"overlays/HoloStamps/HoloStamp_Alchemy.png","B":"overlays/HoloStamps/HoloStamp_B.png","BG":"overlays/HoloStamps/HoloStamp_BG.png","BR":"overlays/HoloStamps/HoloStamp_BR.png","C":"overlays/HoloStamps/HoloStamp_C.png","G":"overlays/HoloStamps/HoloStamp_G.png","GU":"overlays/HoloStamps/HoloStamp_GU.png","GW":"overlays/HoloStamps/HoloStamp_GW.png","Gray":"overlays/HoloStamps/HoloStamp_Gray.png","L":"overlays/HoloStamps/HoloStamp_L.png","M":"overlays/HoloStamps/HoloStamp_M.png","Plane":"overlays/HoloStamps/HoloStamp_Plane.png","R":"overlays/HoloStamps/HoloStamp_R.png","RG":"overlays/HoloStamps/HoloStamp_RG.png","RW":"overlays/HoloStamps/HoloStamp_RW.png","U":"overlays/HoloStamps/HoloStamp_U.png","UB":"overlays/HoloStamps/HoloStamp_UB.png","UR":"overlays/HoloStamps/HoloStamp_UR.png","W":"overlays/HoloStamps/HoloStamp_W.png","WB":"overlays/HoloStamps/HoloStamp_WB.png","WU":"overlays/HoloStamps/HoloStamp_WU.png"};
+  const BUILTIN_NICKNAMES = {"A":"overlays/Nicknames/Nickname_A.png","B":"overlays/Nicknames/Nickname_B.png","BG":"overlays/Nicknames/Nickname_BG.png","BR":"overlays/Nicknames/Nickname_BR.png","C":"overlays/Nicknames/Nickname_C.png","G":"overlays/Nicknames/Nickname_G.png","GU":"overlays/Nicknames/Nickname_GU.png","GW":"overlays/Nicknames/Nickname_GW.png","L":"overlays/Nicknames/Nickname_L.png","M":"overlays/Nicknames/Nickname_M.png","R":"overlays/Nicknames/Nickname_R.png","RG":"overlays/Nicknames/Nickname_RG.png","RW":"overlays/Nicknames/Nickname_RW.png","U":"overlays/Nicknames/Nickname_U.png","UB":"overlays/Nicknames/Nickname_UB.png","UR":"overlays/Nicknames/Nickname_UR.png","W":"overlays/Nicknames/Nickname_W.png","WB":"overlays/Nicknames/Nickname_WB.png","WU":"overlays/Nicknames/Nickname_WU.png"};
   const BUILTIN_PT_BACKGROUNDS = {"A": "overlays/pt/A.png", "B": "overlays/pt/B.png", "C": "overlays/pt/C.png", "G": "overlays/pt/G.png", "M": "overlays/pt/M.png", "R": "overlays/pt/R.png", "U": "overlays/pt/U.png", "V": "overlays/pt/V.png", "W": "overlays/pt/W.png"};
   const DEFAULT_LEGEND_CROWN_LAYOUT = { left: 502.5, top: 77, scaleX: 1, scaleY: 1, angle: 0, opacity: 1 };
   const LEGEND_CROWN_POS_KEY = 'mtg-card-editor-legend-crown-transform-v1';
@@ -211,6 +216,38 @@
       if (state.setSymbol) state.setSymbol.bringToFront();
       state.canvas.requestRenderAll();
     }, {crossOrigin:'anonymous'});
+  }
+
+  function nicknameKeyForCard(card) {
+    if (!card) return '';
+    const typeLine=String(card.type_line || card.card_faces?.map(f=>f.type_line||'').join(' // ') || '');
+    if (/\bLand\b/i.test(typeLine)) return 'L';
+    if (/\bArtifact\b/i.test(typeLine)) return 'A';
+    const colors=getOrderedCardColors(card,false);
+    if (!colors.length) return 'C';
+    if (colors.length===1) return colors[0];
+    if (colors.length===2) return canonicalPair(colors);
+    return 'M';
+  }
+
+  function removeNicknameOverlay(){
+    if(state.nicknameOverlay && state.canvas) state.canvas.remove(state.nicknameOverlay);
+    state.nicknameOverlay=null; state.nicknameKey=''; state.canvas?.requestRenderAll();
+  }
+
+  function loadNicknameForCard(card){
+    if(!state.canvas) return;
+    const key=nicknameKeyForCard(card);
+    state.nicknameKey=key;
+    if(state.nicknameOverlay){state.canvas.remove(state.nicknameOverlay);state.nicknameOverlay=null;}
+    if(!state.nicknameEnabled || !key || !BUILTIN_NICKNAMES[key]){state.canvas.requestRenderAll();return;}
+    fabric.Image.fromURL(BUILTIN_NICKNAMES[key],img=>{
+      if(!img)return;
+      img.set({left:0,top:0,scaleX:CANVAS_W/Math.max(1,img.width),scaleY:CANVAS_H/Math.max(1,img.height),
+        angle:0,opacity:1,originX:'left',originY:'top',name:'__nickname__',
+        selectable:false,evented:false,objectCaching:false});
+      state.nicknameOverlay=img; state.canvas.add(img); keepTextAboveArtwork(); state.canvas.requestRenderAll();
+    },{crossOrigin:'anonymous'});
   }
 
   function ptBackgroundKeyForCard(card) {
@@ -381,7 +418,7 @@
   }
 
   function createTextObjects(layout) {
-    const defaults = { title:'Kartenname', mana:'{2}{U}', type:'Kartentyp — Untertyp', rules:'Kartentext', flavor:'', pt:'2/2' };
+    const defaults = { title:'Kartenname', mana:'{2}{U}', type:'Kartentyp — Untertyp', rules:'Kartentext', nickname:'', flavor:'', pt:'2/2' };
     Object.keys(defaultLayout).forEach(key => {
       const cfg={...defaultLayout[key],...(layout?.[key]||{})};
       if (state.richKeys.has(key)) return;
@@ -390,6 +427,7 @@
     });
     rebuildRichField('mana',defaults.mana,{...defaultLayout.mana,...(layout?.mana||{})});
     rebuildRichField('rules',defaults.rules,{...defaultLayout.rules,...(layout?.rules||{})});
+    if(state.fields.nickname) state.fields.nickname.set('visible',state.nicknameEnabled);
   }
 
 
@@ -946,6 +984,7 @@
     if (state.legendCrown) state.legendCrown.bringToFront();
     if (state.ptBackground) state.ptBackground.bringToFront();
     if (state.holoStamp) state.holoStamp.bringToFront();
+    if (state.nicknameOverlay) state.nicknameOverlay.bringToFront();
     Object.values(state.fields).forEach(obj => obj.bringToFront());
     if (state.manaGroup) state.manaGroup.bringToFront();
     if (state.rulesGroup) state.rulesGroup.bringToFront();
@@ -1516,6 +1555,8 @@
     const card = await getEditionCard(lang);
     state.localizedCard = card;
     loadLegendCrownForCard(card);
+    loadHoloStampForCard(card);
+    loadNicknameForCard(card);
     loadPtBackgroundForCard(card);
     if ($('setSymbolSelect')) {
       const hasEditionSet = Array.from($('setSymbolSelect').options).some(o => o.value === card.set);
@@ -1570,6 +1611,16 @@
     img.src = url;
     link.href = url;
     link.classList.remove('disabled');
+  }
+
+  function setNicknameEnabled(enabled){
+    state.nicknameEnabled=!!enabled;
+    if($('nicknameToggle')) $('nicknameToggle').checked=state.nicknameEnabled;
+    const obj=state.fields.nickname;
+    if(obj) obj.set('visible',state.nicknameEnabled);
+    if(state.nicknameEnabled) loadNicknameForCard(state.localizedCard || state.cardBase);
+    else removeNicknameOverlay();
+    state.canvas?.requestRenderAll();
   }
 
   function bindTextInputs() { document.querySelectorAll('[data-bind]').forEach(input=>input.addEventListener('input',()=>{const key=input.dataset.bind,obj=state.fields[key];if(state.richKeys.has(key)){rebuildRichField(key,input.value);return;}if(!obj)return;obj.set('text',input.value);state.canvas.requestRenderAll();})); }
@@ -1929,6 +1980,9 @@
     $('holoStampForceSelect').addEventListener('change', e => {
       state.holoStampForcedKey = e.target.value || 'AUTO';
       if (state.holoStampForced) loadHoloStampForCard(state.localizedCard || state.cardBase);
+    });
+    $('nicknameToggle').addEventListener('change', e => {
+      setNicknameEnabled(e.target.checked);
     });
     $('ptBackgroundToggle').addEventListener('change', e => {
       state.ptBackgroundEnabled = e.target.checked;
