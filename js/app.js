@@ -35,6 +35,11 @@
     legendCrownForced: false,
     legendCrownForcedKey: 'AUTO',
     legendCrownKey: '',
+    holoStamp: null,
+    holoStampEnabled: true,
+    holoStampForced: false,
+    holoStampForcedKey: 'AUTO',
+    holoStampKey: '',
     ptBackground: null,
     ptBackgroundEnabled: true,
     ptBackgroundKey: '',
@@ -66,6 +71,7 @@
   let availableFrameStyles = [];
 
   const BUILTIN_LEGEND_CROWNS = {"A": "overlays/crowns/A.png", "B": "overlays/crowns/B.png", "BG": "overlays/crowns/BG.png", "BR": "overlays/crowns/BR.png", "C": "overlays/crowns/C.png", "G": "overlays/crowns/G.png", "GU": "overlays/crowns/GU.png", "GW": "overlays/crowns/GW.png", "L": "overlays/crowns/L.png", "M": "overlays/crowns/M.png", "R": "overlays/crowns/R.png", "RG": "overlays/crowns/RG.png", "RW": "overlays/crowns/RW.png", "U": "overlays/crowns/U.png", "UB": "overlays/crowns/UB.png", "UR": "overlays/crowns/UR.png", "W": "overlays/crowns/W.png", "WB": "overlays/crowns/WB.png", "WU": "overlays/crowns/WU.png"};
+  const BUILTIN_HOLO_STAMPS = {"A":"overlays/HoloStamps/HoloStamp_A.png","Acorn":"overlays/HoloStamps/HoloStamp_Acorn.png","Alchemy":"overlays/HoloStamps/HoloStamp_Alchemy.png","B":"overlays/HoloStamps/HoloStamp_B.png","BG":"overlays/HoloStamps/HoloStamp_BG.png","BR":"overlays/HoloStamps/HoloStamp_BR.png","C":"overlays/HoloStamps/HoloStamp_C.png","G":"overlays/HoloStamps/HoloStamp_G.png","GU":"overlays/HoloStamps/HoloStamp_GU.png","GW":"overlays/HoloStamps/HoloStamp_GW.png","Gray":"overlays/HoloStamps/HoloStamp_Gray.png","L":"overlays/HoloStamps/HoloStamp_L.png","M":"overlays/HoloStamps/HoloStamp_M.png","Plane":"overlays/HoloStamps/HoloStamp_Plane.png","R":"overlays/HoloStamps/HoloStamp_R.png","RG":"overlays/HoloStamps/HoloStamp_RG.png","RW":"overlays/HoloStamps/HoloStamp_RW.png","U":"overlays/HoloStamps/HoloStamp_U.png","UB":"overlays/HoloStamps/HoloStamp_UB.png","UR":"overlays/HoloStamps/HoloStamp_UR.png","W":"overlays/HoloStamps/HoloStamp_W.png","WB":"overlays/HoloStamps/HoloStamp_WB.png","WU":"overlays/HoloStamps/HoloStamp_WU.png"};
   const BUILTIN_PT_BACKGROUNDS = {"A": "overlays/pt/A.png", "B": "overlays/pt/B.png", "C": "overlays/pt/C.png", "G": "overlays/pt/G.png", "M": "overlays/pt/M.png", "R": "overlays/pt/R.png", "U": "overlays/pt/U.png", "V": "overlays/pt/V.png", "W": "overlays/pt/W.png"};
   const DEFAULT_LEGEND_CROWN_LAYOUT = { left: 502.5, top: 77, scaleX: 1, scaleY: 1, angle: 0, opacity: 1 };
   const LEGEND_CROWN_POS_KEY = 'mtg-card-editor-legend-crown-transform-v1';
@@ -160,6 +166,51 @@
       keepTextAboveArtwork();
       state.canvas.requestRenderAll();
     }, { crossOrigin:'anonymous' });
+  }
+
+  function holoStampKeyForCard(card) {
+    if (!card) return '';
+    const typeLine = String(card.type_line || card.card_faces?.map(f => f.type_line || '').join(' // ') || '');
+    if (/\bPlane\b/i.test(typeLine)) return 'Plane';
+    if (/\bLand\b/i.test(typeLine)) return 'L';
+    if (/\bArtifact\b/i.test(typeLine)) return 'A';
+    const colors = getOrderedCardColors(card, false);
+    if (!colors.length) return 'C';
+    if (colors.length === 1) return colors[0];
+    if (colors.length === 2) return canonicalPair(colors);
+    return 'M';
+  }
+
+  function removeHoloStamp() {
+    if (state.holoStamp && state.canvas) state.canvas.remove(state.holoStamp);
+    state.holoStamp = null;
+    state.holoStampKey = '';
+    state.canvas?.requestRenderAll();
+  }
+
+  function loadHoloStampForCard(card) {
+    if (!state.canvas) return;
+    let key = holoStampKeyForCard(card);
+    if (state.holoStampForced && state.holoStampForcedKey !== 'AUTO') key = state.holoStampForcedKey;
+    state.holoStampKey = key;
+    if (state.holoStamp) { state.canvas.remove(state.holoStamp); state.holoStamp = null; }
+    if (!state.holoStampEnabled || !key || !BUILTIN_HOLO_STAMPS[key]) {
+      state.canvas.requestRenderAll(); return;
+    }
+    fabric.Image.fromURL(BUILTIN_HOLO_STAMPS[key], img => {
+      if (!img) return;
+      img.set({
+        left:0, top:0,
+        scaleX:CANVAS_W/Math.max(1,img.width), scaleY:CANVAS_H/Math.max(1,img.height),
+        angle:0, opacity:1, originX:'left', originY:'top',
+        name:'__holo_stamp__', selectable:false, evented:false, objectCaching:false
+      });
+      state.holoStamp=img;
+      state.canvas.add(img);
+      keepTextAboveArtwork();
+      if (state.setSymbol) state.setSymbol.bringToFront();
+      state.canvas.requestRenderAll();
+    }, {crossOrigin:'anonymous'});
   }
 
   function ptBackgroundKeyForCard(card) {
@@ -1641,6 +1692,7 @@
         try { localStorage.setItem(LEGEND_CROWN_POS_KEY, JSON.stringify(data.legendCrown.transform)); } catch (_) {}
       }
       loadLegendCrownForCard(state.localizedCard || state.cardBase);
+      loadHoloStampForCard(state.localizedCard || state.cardBase);
     }
     if (data.setSymbol) {
       state.setSymbolEnabled = !!data.setSymbol.enabled;
@@ -1855,10 +1907,24 @@
     $('legendCrownForceToggle').addEventListener('change', e => {
       state.legendCrownForced = e.target.checked;
       loadLegendCrownForCard(state.localizedCard || state.cardBase);
+      loadHoloStampForCard(state.localizedCard || state.cardBase);
     });
     $('legendCrownForceSelect').addEventListener('change', e => {
       state.legendCrownForcedKey = e.target.value || 'AUTO';
       if (state.legendCrownForced) loadLegendCrownForCard(state.localizedCard || state.cardBase);
+    });
+    $('holoStampToggle').addEventListener('change', e => {
+      state.holoStampEnabled = e.target.checked;
+      if (state.holoStampEnabled) loadHoloStampForCard(state.localizedCard || state.cardBase);
+      else removeHoloStamp();
+    });
+    $('holoStampForceToggle').addEventListener('change', e => {
+      state.holoStampForced = e.target.checked;
+      loadHoloStampForCard(state.localizedCard || state.cardBase);
+    });
+    $('holoStampForceSelect').addEventListener('change', e => {
+      state.holoStampForcedKey = e.target.value || 'AUTO';
+      if (state.holoStampForced) loadHoloStampForCard(state.localizedCard || state.cardBase);
     });
     $('ptBackgroundToggle').addEventListener('change', e => {
       state.ptBackgroundEnabled = e.target.checked;
