@@ -1937,9 +1937,10 @@
     setFlavorEnabled(true);
     setAutoTextContrast(true);
     if (canvasReady) {
-      const startupLayout = JSON.parse(JSON.stringify(BUILTIN_LAYOUTS.standard));
-      delete startupLayout.artwork;
-      applyLayout(startupLayout);
+      // Beim Start wirklich dieselbe Standard-Vorlage anwenden, die auch im Dropdown
+      // ausgewählt ist. Falls layouts/standard.json vorhanden ist, hat sie Vorrang vor
+      // dem eingebauten Fallback. So ist die erste geladene Karte sofort korrekt.
+      await applyLayoutPresetValue('builtin:standard');
       const tpl = state.templates[state.currentTemplateIndex];
       if (tpl) loadTemplate(tpl.file, tpl.name);
       requestAnimationFrame(() => resizeCanvasToContainer());
