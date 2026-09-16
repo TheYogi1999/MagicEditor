@@ -779,7 +779,7 @@
     const base=old?{
       left:key==='mana'?(oldRight??old.left):old.left,
       top:old.top,angle:old.angle||0,scaleX:old.scaleX||1,scaleY:old.scaleY||1,opacity:old.opacity??1,
-      fontSize:old.editorFontSize,fontFamily:old.editorFontFamily,width:old.editorWidth,fill:old.editorFill,
+      fontSize:old.editorFontSize,fontFamily:old.editorFontFamily,fontStyle:old.editorFontStyle,width:old.editorWidth,fill:old.editorFill,
       lineHeight:old.editorLineHeight,textAlign:old.editorTextAlign,anchorRight:key==='mana'
     }:{...defaultLayout[key]};
     const cfg={...base,...(overrideCfg||{})};
@@ -809,7 +809,7 @@
           const img=makeManaFabricObject(tok.value,iconSize);
           if(img){img.set({left:x,top:y+Math.max(0,(lineH-iconSize)/2),selectable:false,evented:false,originX:'left',originY:'top'});pieces.push(img);}
           else pieces.push(new fabric.Text(tok.value,{left:x,top:y,fontSize:cfg.fontSize*.72,fontFamily:cfg.fontFamily,fill:cfg.fill||'#111',selectable:false,evented:false}));
-        }else pieces.push(new fabric.Text(tok.value,{left:x,top:y,fontSize:cfg.fontSize,fontFamily:cfg.fontFamily,fill:cfg.fill||'#111111',fontWeight:key==='mana'?'bold':'normal',fontStyle:tok.italic?'italic':'normal',selectable:false,evented:false,originX:'left',originY:'top'}));
+        }else pieces.push(new fabric.Text(tok.value,{left:x,top:y,fontSize:cfg.fontSize,fontFamily:cfg.fontFamily,fill:cfg.fill||'#111111',fontWeight:key==='mana'?'bold':'normal',fontStyle:(tok.italic||cfg.fontStyle==='italic')?'italic':'normal',selectable:false,evented:false,originX:'left',originY:'top'}));
         x+=tok.width;
       }
     }
@@ -820,7 +820,7 @@
     };
     const group=new fabric.Group(pieces,groupOpts);
     Object.assign(group,{
-      editorType:'rich',editorText:String(text||''),editorFontSize:cfg.fontSize,editorFontFamily:cfg.fontFamily,
+      editorType:'rich',editorText:String(text||''),editorFontSize:cfg.fontSize,editorFontFamily:cfg.fontFamily,editorFontStyle:cfg.fontStyle||'normal',
       editorWidth:key==='mana'?Math.max(Number(cfg.width||0),contentWidth):maxWidth,editorFill:cfg.fill||'#111111',editorLineHeight:cfg.lineHeight,
       editorTextAlign:cfg.textAlign||(key==='mana'?'right':'left'),editorAnchorRight:key==='mana'
     });
@@ -997,6 +997,8 @@
     if (state.manaGroup) state.manaGroup.bringToFront();
     if (state.rulesGroup) state.rulesGroup.bringToFront();
     if (state.setSymbol) state.setSymbol.bringToFront();
+    // Legendary Crown ist bewusst der oberste Canvas-Layer.
+    if (state.legendCrown) state.legendCrown.bringToFront();
   }
 
   function fileToDataURL(file) {
@@ -1682,7 +1684,7 @@
       fields[key] = {
         left: obj.left, top: obj.top, width: obj.editorType==='rich'?obj.editorWidth:obj.width, anchorRight: !!obj.editorAnchorRight,
         fontSize: obj.editorType==='rich'?obj.editorFontSize:obj.fontSize, fontFamily: obj.editorType==='rich'?obj.editorFontFamily:obj.fontFamily,
-        fontWeight: obj.fontWeight, fontStyle: obj.fontStyle,
+        fontWeight: obj.fontWeight, fontStyle: obj.editorType==='rich'?(obj.editorFontStyle||'normal'):obj.fontStyle,
         fill: obj.editorType==='rich'?obj.editorFill:obj.fill, textAlign: obj.editorType==='rich'?obj.editorTextAlign:obj.textAlign,
         lineHeight: obj.editorType==='rich'?obj.editorLineHeight:obj.lineHeight, angle: obj.angle,
         scaleX: obj.scaleX, scaleY: obj.scaleY, opacity: obj.opacity,
