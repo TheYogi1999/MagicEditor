@@ -107,6 +107,16 @@
           </select>
           <p class="hint">Auto wählt den HoloStamp anhand von Kartenfarbe und Kartentyp. Mit „HoloStamp forcen“ kannst du jede Variante manuell erzwingen.</p>
         </div>
+
+        <div class="subcard">
+          <label style="display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;">
+            <input id="nicknameToggle" type="checkbox" style="width:auto;" />
+            Nickname anzeigen
+          </label>
+          <label for="nicknameText">Nickname</label>
+          <input id="nicknameText" data-bind="nickname" type="text" placeholder="Nickname …" />
+          <p class="hint">Blendet den passenden Nickname-Hintergrund zusammen mit dem Nickname-Text ein oder aus. Die Variante wird automatisch anhand der Karte gewählt.</p>
+        </div>
       </section>
 
       <section class="ui-panel" data-ui-group="design">
