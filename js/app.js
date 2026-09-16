@@ -281,17 +281,42 @@
     state.canvas.setWidth(CANVAS_W);
     state.canvas.setHeight(CANVAS_H);
 
-    // Artwork soll mit einem einzigen Klick greifbar sein, auch wenn der
-    // nicht-evented Frame/Overlays darüber liegen. Klickt man auf eine freie
-    // Bildstelle, wird das Artwork sofort aktiviert und derselbe Drag bewegt es.
+    // Artwork direkt mit dem ersten Klick/Drag greifen.
+    // Fabric bestimmt opt.target vor mouse:down:before; Text/andere editierbare
+    // Elemente behalten Priorität. Nicht-interaktive Overlays dürfen das Artwork
+    // dagegen nicht blockieren.
     state.canvas.on('mouse:down:before', opt => {
-      if (!state.artwork || opt.target) return;
+      if (!state.artwork) return;
       const p = state.canvas.getPointer(opt.e);
-      if (!state.artwork.containsPoint(new fabric.Point(p.x, p.y))) return;
-      state.canvas.setActiveObject(state.artwork);
+      const point = new fabric.Point(p.x, p.y);
+      if (!state.artwork.containsPoint(point)) return;
+
+      const target = opt.target;
+      const isRealEditableTarget = target &&
+        target !== state.artwork &&
+        target.selectable !== false &&
+        target.evented !== false;
+
+      if (isRealEditableTarget) return;
+
+      if (state.canvas.getActiveObject() !== state.artwork) {
+        state.canvas.discardActiveObject();
+        state.canvas.setActiveObject(state.artwork);
+      }
       state.artwork.setCoords();
       state.canvas.requestRenderAll();
     });
+
+    // Falls Fabric beim ersten Pointer-Down trotzdem kein Target liefert,
+    // Artwork zusätzlich direkt über findTarget aktivieren.
+    const originalFindTarget = state.canvas.findTarget.bind(state.canvas);
+    state.canvas.findTarget = function(e, skipGroup) {
+      const target = originalFindTarget(e, skipGroup);
+      if (target) return target;
+      if (!state.artwork || state.artwork.evented === false || state.artwork.selectable === false) return target;
+      const p = state.canvas.getPointer(e);
+      return state.artwork.containsPoint(new fabric.Point(p.x, p.y)) ? state.artwork : target;
+    };
 
     state.canvas.on('selection:created', syncSelectionControls);
     state.canvas.on('selection:updated', syncSelectionControls);
