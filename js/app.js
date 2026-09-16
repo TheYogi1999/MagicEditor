@@ -544,6 +544,9 @@
     } else if(/^\d+$/.test(raw) || ['X','Y','Z','E','CHAOS','∞'].includes(raw)){
       fillCircle(neutral);
       if(!drawGlyph(raw,50,50,raw==='E'?78:60)) fallback(raw,50,50,raw==='E'?42:(raw.length>2?27:40));
+    } else if(raw==='P'){
+      fillCircle(neutral);
+      if(!drawGlyph('P',50,50,78)) fallback('Φ',50,50,52);
     } else if(raw==='T' || raw==='Q'){
       fillCircle(raw==='Q' ? '#111111' : neutral);
       const fg=raw==='Q' ? '#fff' : '#111';
