@@ -546,7 +546,9 @@
       if(!drawGlyph(raw,50,50,raw==='E'?78:60)) fallback(raw,50,50,raw==='E'?42:(raw.length>2?27:40));
     } else if(raw==='P'){
       fillCircle(neutral);
-      if(!drawGlyph('P',50,50,78)) fallback('Φ',50,50,52);
+      // Einzelnes {P}: Mana-Font-Glyphe hat intern mehr Leerraum als Farbsymbole.
+      // Daher optisch auf dieselbe sichtbare Größe wie die 78er Einzel-Mana skalieren.
+      if(!drawGlyph('P',50,50,92)) fallback('Φ',50,50,60);
     } else if(raw==='T' || raw==='Q'){
       fillCircle(raw==='Q' ? '#111111' : neutral);
       const fg=raw==='Q' ? '#fff' : '#111';
