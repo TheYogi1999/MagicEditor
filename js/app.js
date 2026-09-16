@@ -40,9 +40,11 @@
     holoStampForced: false,
     holoStampForcedKey: 'AUTO',
     holoStampKey: '',
+    holoStampRequestId: 0,
     nicknameOverlay: null,
     nicknameEnabled: false,
     nicknameKey: '',
+    nicknameRequestId: 0,
     ptBackground: null,
     ptBackgroundEnabled: true,
     ptBackgroundKey: '',
@@ -195,6 +197,7 @@
 
   function loadHoloStampForCard(card) {
     if (!state.canvas) return;
+    const requestId=++state.holoStampRequestId;
     let key = holoStampKeyForCard(card);
     if (state.holoStampForced && state.holoStampForcedKey !== 'AUTO') key = state.holoStampForcedKey;
     state.holoStampKey = key;
@@ -203,7 +206,7 @@
       state.canvas.requestRenderAll(); return;
     }
     fabric.Image.fromURL(BUILTIN_HOLO_STAMPS[key], img => {
-      if (!img) return;
+      if (!img || requestId!==state.holoStampRequestId) return;
       img.set({
         left:0, top:0,
         scaleX:CANVAS_W/Math.max(1,img.width), scaleY:CANVAS_H/Math.max(1,img.height),
@@ -237,12 +240,13 @@
 
   function loadNicknameForCard(card){
     if(!state.canvas) return;
+    const requestId=++state.nicknameRequestId;
     const key=nicknameKeyForCard(card);
     state.nicknameKey=key;
     if(state.nicknameOverlay){state.canvas.remove(state.nicknameOverlay);state.nicknameOverlay=null;}
     if(!state.nicknameEnabled || !key || !BUILTIN_NICKNAMES[key]){state.canvas.requestRenderAll();return;}
     fabric.Image.fromURL(BUILTIN_NICKNAMES[key],img=>{
-      if(!img)return;
+      if(!img || requestId!==state.nicknameRequestId)return;
       img.set({left:0,top:0,scaleX:CANVAS_W/Math.max(1,img.width),scaleY:CANVAS_H/Math.max(1,img.height),
         angle:0,opacity:1,originX:'left',originY:'top',name:'__nickname__',
         selectable:false,evented:false,objectCaching:false});
@@ -422,7 +426,7 @@
     Object.keys(defaultLayout).forEach(key => {
       const cfg={...defaultLayout[key],...(layout?.[key]||{})};
       if (state.richKeys.has(key)) return;
-      const text=new fabric.Textbox(defaults[key],{...cfg,originX:'left',originY:'top',editable:true,objectCaching:false,splitByGrapheme:false,fontFamily:'Arial',cornerStyle:'circle',transparentCorners:false,cornerSize:12,padding:2,name:key});
+      const text=new fabric.Textbox(defaults[key],{...cfg,originX:'left',originY:'top',editable:true,objectCaching:false,splitByGrapheme:false,cornerStyle:'circle',transparentCorners:false,cornerSize:12,padding:2,name:key});
       state.fields[key]=text; state.canvas.add(text);
     });
     rebuildRichField('mana',defaults.mana,{...defaultLayout.mana,...(layout?.mana||{})});
@@ -985,7 +989,11 @@
     if (state.ptBackground) state.ptBackground.bringToFront();
     if (state.holoStamp) state.holoStamp.bringToFront();
     if (state.nicknameOverlay) state.nicknameOverlay.bringToFront();
-    Object.values(state.fields).forEach(obj => obj.bringToFront());
+    Object.entries(state.fields).forEach(([key,obj]) => {
+      // Nickname text belongs directly above its matching overlay.
+      if(key!=='nickname') obj.bringToFront();
+    });
+    if(state.fields.nickname) state.fields.nickname.bringToFront();
     if (state.manaGroup) state.manaGroup.bringToFront();
     if (state.rulesGroup) state.rulesGroup.bringToFront();
     if (state.setSymbol) state.setSymbol.bringToFront();
@@ -1574,6 +1582,11 @@
     updateOriginalCard(card, card.lang || lang);
     const autoFrame = autoSelectFrameForCard(card);
     await loadCardArtwork(card);
+    // Frame und Artwork laden asynchron. Danach Overlays nochmals für exakt
+    // die aktuell geladene Karte setzen, damit kein alter Request sichtbar bleibt.
+    loadHoloStampForCard(card);
+    loadNicknameForCard(card);
+    keepTextAboveArtwork();
     const fallback = lang === 'de' && card.lang !== 'de' ? ' (Deutsch in dieser Edition nicht verfügbar – EN)' : '';
     const frameInfo = autoFrame ? ` — Rahmen: ${autoFrame.template}` : '';
     setStatus(`${card.name || state.cardBase.name} — ${card.set_name || card.set?.toUpperCase()}${fallback}${frameInfo}`);
@@ -1962,7 +1975,6 @@
     $('legendCrownForceToggle').addEventListener('change', e => {
       state.legendCrownForced = e.target.checked;
       loadLegendCrownForCard(state.localizedCard || state.cardBase);
-      loadHoloStampForCard(state.localizedCard || state.cardBase);
     });
     $('legendCrownForceSelect').addEventListener('change', e => {
       state.legendCrownForcedKey = e.target.value || 'AUTO';
