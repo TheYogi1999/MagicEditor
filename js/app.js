@@ -1628,8 +1628,23 @@
     link.classList.remove('disabled');
   }
 
-  function setNicknameEnabled(enabled){
-    state.nicknameEnabled=!!enabled;
+    function setNicknameEnabled(enabled){
+    const nextEnabled=!!enabled;
+    if(nextEnabled!==state.nicknameEnabled){
+      const title=state.fields.title;
+      const nickname=state.fields.nickname;
+      if(title && nickname){
+        const titleText=title.text||'';
+        const nicknameText=nickname.text||'';
+        title.set('text',nicknameText);
+        nickname.set('text',titleText);
+        const titleInput=document.querySelector('[data-bind="title"]');
+        const nicknameInput=document.querySelector('[data-bind="nickname"]');
+        if(titleInput) titleInput.value=nicknameText;
+        if(nicknameInput) nicknameInput.value=titleText;
+      }
+    }
+    state.nicknameEnabled=nextEnabled;
     if($('nicknameToggle')) $('nicknameToggle').checked=state.nicknameEnabled;
     const obj=state.fields.nickname;
     if(obj) obj.set('visible',state.nicknameEnabled);
