@@ -1057,8 +1057,11 @@
   function scryfallCardText(card, lang) {
     const face = card.card_faces?.[0] || card;
     const usePrinted = lang !== 'en';
+    const cardName = (usePrinted && face.printed_name) || face.name || card.name || '';
+    const flavorName = face.flavor_name || card.flavor_name || '';
     return {
-      title: (usePrinted && face.printed_name) || face.name || card.name || '',
+      title: state.nicknameEnabled ? flavorName : cardName,
+      nickname: state.nicknameEnabled ? cardName : '',
       mana: face.mana_cost || card.mana_cost || '',
       type: (usePrinted && face.printed_type_line) || face.type_line || card.type_line || '',
       rules: String((usePrinted && face.printed_text) || face.oracle_text || card.oracle_text || '').replace(/\r\n?/g, '\n'),
@@ -1600,7 +1603,7 @@
   }
 
   function updateAllText(values) {
-    Object.entries(values).forEach(([key,val]) => { const input=document.querySelector(`[data-bind="${key}"]`); if(input)input.value=val||''; const obj=state.fields[key]; if(state.richKeys.has(key))rebuildRichField(key,val||''); else if(obj)obj.set('text',val||''); });
+    Object.entries(values).forEach(([key,val]) => { syncBoundInputs(key,val||''); const obj=state.fields[key]; if(state.richKeys.has(key))rebuildRichField(key,val||''); else if(obj)obj.set('text',val||''); });
     if(state.canvas)state.canvas.requestRenderAll();
     scheduleAutoTextContrast(100);
   }
@@ -1628,23 +1631,20 @@
     link.classList.remove('disabled');
   }
 
-    function setNicknameEnabled(enabled){
+  function setNicknameEnabled(enabled){
     const nextEnabled=!!enabled;
-    if(nextEnabled!==state.nicknameEnabled){
-      const title=state.fields.title;
-      const nickname=state.fields.nickname;
-      if(title && nickname){
-        const titleText=title.text||'';
-        const nicknameText=nickname.text||'';
-        title.set('text',nicknameText);
-        nickname.set('text',titleText);
-        const titleInput=document.querySelector('[data-bind="title"]');
-        const nicknameInput=document.querySelector('[data-bind="nickname"]');
-        if(titleInput) titleInput.value=nicknameText;
-        if(nicknameInput) nicknameInput.value=titleText;
-      }
-    }
+    if(nextEnabled===state.nicknameEnabled)return;
     state.nicknameEnabled=nextEnabled;
+    const card=state.localizedCard || state.cardBase;
+    const values=card ? scryfallCardText(card,state.currentLanguage) : {
+      title: nextEnabled ? '' : (state.fields.nickname?.text || state.fields.title?.text || ''),
+      nickname: nextEnabled ? (state.fields.title?.text || '') : '',
+    };
+    ['title','nickname'].forEach(key=>{
+      const value=values[key]||'';
+      state.fields[key]?.set('text',value);
+      syncBoundInputs(key,value);
+    });
     if($('nicknameToggle')) $('nicknameToggle').checked=state.nicknameEnabled;
     const obj=state.fields.nickname;
     if(obj) obj.set('visible',state.nicknameEnabled);
@@ -1653,7 +1653,9 @@
     state.canvas?.requestRenderAll();
   }
 
-  function bindTextInputs() { document.querySelectorAll('[data-bind]').forEach(input=>input.addEventListener('input',()=>{const key=input.dataset.bind,obj=state.fields[key];if(state.richKeys.has(key)){rebuildRichField(key,input.value);return;}if(!obj)return;obj.set('text',input.value);state.canvas.requestRenderAll();})); }
+  function syncBoundInputs(key,value){document.querySelectorAll(`[data-bind="${key}"]`).forEach(input=>{input.value=value;});}
+
+  function bindTextInputs() { document.querySelectorAll('[data-bind]').forEach(input=>input.addEventListener('input',()=>{const key=input.dataset.bind,obj=state.fields[key];syncBoundInputs(key,input.value);if(state.richKeys.has(key)){rebuildRichField(key,input.value);return;}if(!obj)return;obj.set('text',input.value);state.canvas.requestRenderAll();})); }
 
   function syncSelectionControls() { const obj=state.canvas.getActiveObject(); if(!obj)return; $('fontSize').value=obj.editorType==='rich'?obj.editorFontSize:(obj.fontSize||''); $('textWidth').value=Math.round(obj.editorType==='rich'?obj.editorWidth:(obj.width||0)); $('opacity').value=obj.opacity??1; const fill=obj.editorType==='rich'?obj.editorFill:obj.fill; if(typeof fill==='string'&&fill.startsWith('#'))$('textColor').value=fill; const fam=obj.editorType==='rich'?obj.editorFontFamily:obj.fontFamily; if(fam)$('fontFamily').value=fam; }
 
@@ -1666,8 +1668,8 @@
       return;
     }
     if (!obj.name || !state.fields[obj.name]) return;
-    const input = document.querySelector(`[data-bind="${obj.name}"]`);
-    if(input) input.value=obj.editorType==='rich'?(obj.editorText||''):(typeof obj.text==='string'?obj.text:input.value);
+    const value=obj.editorType==='rich'?(obj.editorText||''):(typeof obj.text==='string'?obj.text:'');
+    syncBoundInputs(obj.name,value);
     syncSelectionControls();
   }
 
