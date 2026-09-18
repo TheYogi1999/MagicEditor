@@ -32,9 +32,11 @@
     setInfoCache: new Map(),
     legendCrown: null,
     legendCrownEnabled: true,
+    legendCrownStyle: 'normal',
     legendCrownForced: false,
     legendCrownForcedKey: 'AUTO',
     legendCrownKey: '',
+    legendCrownRequestId: 0,
     holoStamp: null,
     holoStampEnabled: true,
     holoStampForced: false,
@@ -77,6 +79,8 @@
   let availableFrameStyles = [];
 
   const BUILTIN_LEGEND_CROWNS = {"A": "overlays/crowns/A.png", "B": "overlays/crowns/B.png", "BG": "overlays/crowns/BG.png", "BR": "overlays/crowns/BR.png", "C": "overlays/crowns/C.png", "G": "overlays/crowns/G.png", "GU": "overlays/crowns/GU.png", "GW": "overlays/crowns/GW.png", "L": "overlays/crowns/L.png", "M": "overlays/crowns/M.png", "R": "overlays/crowns/R.png", "RG": "overlays/crowns/RG.png", "RW": "overlays/crowns/RW.png", "U": "overlays/crowns/U.png", "UB": "overlays/crowns/UB.png", "UR": "overlays/crowns/UR.png", "W": "overlays/crowns/W.png", "WB": "overlays/crowns/WB.png", "WU": "overlays/crowns/WU.png"};
+  const BUILTIN_FLOATING_LEGEND_CROWNS = {"A":"overlays/FlotingCrowns/A.png","B":"overlays/FlotingCrowns/B.png","BG":"overlays/FlotingCrowns/BG.png","BR":"overlays/FlotingCrowns/BR.png","C":"overlays/FlotingCrowns/C.png","G":"overlays/FlotingCrowns/G.png","GU":"overlays/FlotingCrowns/GU.png","GW":"overlays/FlotingCrowns/GW.png","L":"overlays/FlotingCrowns/L.png","M":"overlays/FlotingCrowns/M.png","R":"overlays/FlotingCrowns/R.png","RG":"overlays/FlotingCrowns/RG.png","RW":"overlays/FlotingCrowns/RW.png","U":"overlays/FlotingCrowns/U.png","UB":"overlays/FlotingCrowns/UB.png","UR":"overlays/FlotingCrowns/UR.png","W":"overlays/FlotingCrowns/W.png","WB":"overlays/FlotingCrowns/WB.png","WU":"overlays/FlotingCrowns/WU.png"};
+  const LEGEND_CROWN_STYLES = { normal:BUILTIN_LEGEND_CROWNS, floating:BUILTIN_FLOATING_LEGEND_CROWNS };
   const BUILTIN_HOLO_STAMPS = {"A":"overlays/HoloStamps/HoloStamp_A.png","Acorn":"overlays/HoloStamps/HoloStamp_Acorn.png","Alchemy":"overlays/HoloStamps/HoloStamp_Alchemy.png","B":"overlays/HoloStamps/HoloStamp_B.png","BG":"overlays/HoloStamps/HoloStamp_BG.png","BR":"overlays/HoloStamps/HoloStamp_BR.png","C":"overlays/HoloStamps/HoloStamp_C.png","G":"overlays/HoloStamps/HoloStamp_G.png","GU":"overlays/HoloStamps/HoloStamp_GU.png","GW":"overlays/HoloStamps/HoloStamp_GW.png","Gray":"overlays/HoloStamps/HoloStamp_Gray.png","L":"overlays/HoloStamps/HoloStamp_L.png","M":"overlays/HoloStamps/HoloStamp_M.png","Plane":"overlays/HoloStamps/HoloStamp_Plane.png","R":"overlays/HoloStamps/HoloStamp_R.png","RG":"overlays/HoloStamps/HoloStamp_RG.png","RW":"overlays/HoloStamps/HoloStamp_RW.png","U":"overlays/HoloStamps/HoloStamp_U.png","UB":"overlays/HoloStamps/HoloStamp_UB.png","UR":"overlays/HoloStamps/HoloStamp_UR.png","W":"overlays/HoloStamps/HoloStamp_W.png","WB":"overlays/HoloStamps/HoloStamp_WB.png","WU":"overlays/HoloStamps/HoloStamp_WU.png"};
   const BUILTIN_NICKNAMES = {"A":"overlays/Nicknames/Nickname_A.png","B":"overlays/Nicknames/Nickname_B.png","BG":"overlays/Nicknames/Nickname_BG.png","BR":"overlays/Nicknames/Nickname_BR.png","C":"overlays/Nicknames/Nickname_C.png","G":"overlays/Nicknames/Nickname_G.png","GU":"overlays/Nicknames/Nickname_GU.png","GW":"overlays/Nicknames/Nickname_GW.png","L":"overlays/Nicknames/Nickname_L.png","M":"overlays/Nicknames/Nickname_M.png","R":"overlays/Nicknames/Nickname_R.png","RG":"overlays/Nicknames/Nickname_RG.png","RW":"overlays/Nicknames/Nickname_RW.png","U":"overlays/Nicknames/Nickname_U.png","UB":"overlays/Nicknames/Nickname_UB.png","UR":"overlays/Nicknames/Nickname_UR.png","W":"overlays/Nicknames/Nickname_W.png","WB":"overlays/Nicknames/Nickname_WB.png","WU":"overlays/Nicknames/Nickname_WU.png"};
   const BUILTIN_PT_BACKGROUNDS = {"A": "overlays/pt/A.png", "B": "overlays/pt/B.png", "C": "overlays/pt/C.png", "G": "overlays/pt/G.png", "M": "overlays/pt/M.png", "R": "overlays/pt/R.png", "U": "overlays/pt/U.png", "V": "overlays/pt/V.png", "W": "overlays/pt/W.png"};
@@ -125,6 +129,7 @@
   }
 
   function removeLegendCrown() {
+    state.legendCrownRequestId++;
     if (state.legendCrown && state.canvas) state.canvas.remove(state.legendCrown);
     state.legendCrown = null;
     state.legendCrownKey = '';
@@ -133,6 +138,8 @@
 
   function loadLegendCrownForCard(card) {
     if (!state.canvas) return;
+    const requestId=++state.legendCrownRequestId;
+    const crowns=LEGEND_CROWN_STYLES[state.legendCrownStyle] || BUILTIN_LEGEND_CROWNS;
     let key = legendCrownKeyForCard(card);
     if (state.legendCrownForced) {
       if (state.legendCrownForcedKey && state.legendCrownForcedKey !== 'AUTO') {
@@ -151,13 +158,13 @@
       state.canvas.remove(state.legendCrown);
       state.legendCrown = null;
     }
-    if (!state.legendCrownEnabled || !key || !BUILTIN_LEGEND_CROWNS[key]) {
+    if (!state.legendCrownEnabled || !key || !crowns[key]) {
       state.canvas.requestRenderAll();
       return;
     }
 
-    fabric.Image.fromURL(BUILTIN_LEGEND_CROWNS[key], img => {
-      if (!img) return;
+    fabric.Image.fromURL(crowns[key], img => {
+      if (!img || requestId!==state.legendCrownRequestId) return;
       img.set({
         left: 0, top: 0,
         scaleX: CANVAS_W / Math.max(1, img.width),
@@ -1721,6 +1728,7 @@
       },
       legendCrown: {
         enabled: !!state.legendCrownEnabled,
+        style: state.legendCrownStyle,
         key: state.legendCrownKey || '',
         transform: state.legendCrown ? {
           left: state.legendCrown.left, top: state.legendCrown.top,
@@ -1773,7 +1781,9 @@
     }
     if (data.legendCrown) {
       state.legendCrownEnabled = data.legendCrown.enabled !== false;
+      state.legendCrownStyle = data.legendCrown.style === 'floating' ? 'floating' : 'normal';
       if ($('legendCrownToggle')) $('legendCrownToggle').checked = state.legendCrownEnabled;
+      if ($('legendCrownStyleSelect')) $('legendCrownStyleSelect').value = state.legendCrownStyle;
       if (data.legendCrown.transform) {
         try { localStorage.setItem(LEGEND_CROWN_POS_KEY, JSON.stringify(data.legendCrown.transform)); } catch (_) {}
       }
@@ -1990,6 +2000,10 @@
       state.legendCrownEnabled = e.target.checked;
       if (state.legendCrownEnabled) loadLegendCrownForCard(state.localizedCard || state.cardBase);
       else removeLegendCrown();
+    });
+    $('legendCrownStyleSelect').addEventListener('change', e => {
+      state.legendCrownStyle = e.target.value === 'floating' ? 'floating' : 'normal';
+      if (state.legendCrownEnabled) loadLegendCrownForCard(state.localizedCard || state.cardBase);
     });
     $('legendCrownForceToggle').addEventListener('change', e => {
       state.legendCrownForced = e.target.checked;
