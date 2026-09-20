@@ -26,6 +26,7 @@
     artworkChoices: [],
     artworkChoiceIndex: -1,
     artworkChoiceRequestId: 0,
+    textFieldsLocked: false,
     currentSet: '',
     setSymbol: null,
     setSymbolEnabled: true,
@@ -437,11 +438,53 @@
       const cfg={...defaultLayout[key],...(layout?.[key]||{})};
       if (state.richKeys.has(key)) return;
       const text=new fabric.Textbox(defaults[key],{...cfg,originX:'left',originY:'top',editable:true,objectCaching:false,splitByGrapheme:false,cornerStyle:'circle',transparentCorners:false,cornerSize:12,padding:2,name:key});
-      state.fields[key]=text; state.canvas.add(text);
+      state.fields[key]=text; updateTextFieldInteraction(text); state.canvas.add(text);
     });
     rebuildRichField('mana',defaults.mana,{...defaultLayout.mana,...(layout?.mana||{})});
     rebuildRichField('rules',defaults.rules,{...defaultLayout.rules,...(layout?.rules||{})});
-    if(state.fields.nickname) state.fields.nickname.set('visible',state.nicknameEnabled);
+    if(state.fields.nickname) {
+      state.fields.nickname.set('visible',state.nicknameEnabled);
+      updateTextFieldInteraction(state.fields.nickname);
+    }
+  }
+
+  function updateTextFieldInteraction(obj) {
+    if (!obj) return;
+    const interactive = !state.textFieldsLocked && obj.visible !== false;
+    obj.set({
+      selectable: interactive,
+      evented: interactive,
+      lockMovementX: !interactive,
+      lockMovementY: !interactive,
+      lockScalingX: !interactive,
+      lockScalingY: !interactive,
+      lockRotation: !interactive,
+      hasControls: interactive,
+    });
+    obj.setCoords();
+  }
+
+  function setTextFieldsLocked(locked, showStatus = true) {
+    state.textFieldsLocked = !!locked;
+    const toggle = $('textFieldsLockToggle');
+    if (toggle) toggle.checked = state.textFieldsLocked;
+
+    const textObjects = Object.values(state.fields);
+    const active = state.canvas?.getActiveObject();
+    textObjects.forEach(updateTextFieldInteraction);
+    if (state.textFieldsLocked && active && textObjects.includes(active)) {
+      state.canvas.discardActiveObject();
+      if (state.artwork) {
+        state.artwork.setCoords();
+        state.canvas.setActiveObject(state.artwork);
+      }
+    }
+    state.canvas?.requestRenderAll();
+    if (showStatus) {
+      setStatus(state.textFieldsLocked
+        ? 'Alle Textfelder sind gesperrt. Das Artwork kann direkt bewegt werden.'
+        : 'Textfelder sind wieder entsperrt.');
+    }
   }
 
 
@@ -834,6 +877,7 @@
       editorWidth:key==='mana'?Math.max(Number(cfg.width||0),contentWidth):maxWidth,editorFill:cfg.fill||'#111111',editorLineHeight:cfg.lineHeight,
       editorTextAlign:cfg.textAlign||(key==='mana'?'right':'left'),editorAnchorRight:key==='mana'
     });
+    updateTextFieldInteraction(group);
     if(old)state.canvas.remove(old);
     state.fields[key]=group;state.canvas.add(group);keepTextAboveArtwork();state.canvas.requestRenderAll();
   }
@@ -1060,6 +1104,12 @@
         top: box.top + (box.height - img.getScaledHeight()) / 2,
       });
     }
+    // Fabric speichert die Trefferfläche eines Objekts zwischen. Nach dem
+    // Einpassen muss sie sofort aktualisiert werden, sonst greift erst ein
+    // späterer Klick das Artwork an seiner neuen Position.
+    img.setCoords();
+    state.canvas.discardActiveObject();
+    state.canvas.setActiveObject(img);
     state.canvas.requestRenderAll();
     scheduleAutoTextContrast(60);
   }
@@ -1127,7 +1177,9 @@
         state.canvas.add(img);
         fitArtwork();
         keepTextAboveArtwork();
-      if (state.setSymbol) state.setSymbol.bringToFront();
+        if (state.setSymbol) state.setSymbol.bringToFront();
+        img.setCoords();
+        state.canvas.setActiveObject(img);
         state.canvas.requestRenderAll();
         scheduleAutoTextContrast(80);
         resolve(true);
@@ -1801,7 +1853,10 @@
     });
     if($('nicknameToggle')) $('nicknameToggle').checked=state.nicknameEnabled;
     const obj=state.fields.nickname;
-    if(obj) obj.set('visible',state.nicknameEnabled);
+    if(obj) {
+      obj.set('visible',state.nicknameEnabled);
+      updateTextFieldInteraction(obj);
+    }
     if(state.nicknameEnabled) loadNicknameForCard(state.localizedCard || state.cardBase);
     else removeNicknameOverlay();
     state.canvas?.requestRenderAll();
@@ -2116,7 +2171,8 @@
     if (field) field.style.opacity = checked ? '1' : '.45';
     const obj = state.fields.flavor;
     if (obj) {
-      obj.set({ visible: checked, selectable: checked, evented: checked });
+      obj.set('visible', checked);
+      updateTextFieldInteraction(obj);
       if (!checked && state.canvas?.getActiveObject() === obj) state.canvas.discardActiveObject();
     }
     if (state.canvas) state.canvas.requestRenderAll();
@@ -2204,6 +2260,7 @@
     $('frameStyleSelect').addEventListener('change', e => setQuickFrameStyle(e.target.value, true));
     $('builtinLayoutSelect').addEventListener('change', e => applyLayoutPresetValue(e.target.value));
     $('autoTextContrastToggle').addEventListener('change', e => setAutoTextContrast(e.target.checked));
+    $('textFieldsLockToggle').addEventListener('change', e => setTextFieldsLocked(e.target.checked));
     $('flavorToggle').addEventListener('change', e => setFlavorEnabled(e.target.checked));
 
     $('templateSelect').addEventListener('change', e => {
