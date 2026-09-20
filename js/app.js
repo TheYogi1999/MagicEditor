@@ -23,6 +23,9 @@
     localizedCard: null,
     currentLanguage: 'en',
     printings: [],
+    artworkChoices: [],
+    artworkChoiceIndex: -1,
+    artworkChoiceRequestId: 0,
     currentSet: '',
     setSymbol: null,
     setSymbolEnabled: true,
@@ -1104,10 +1107,14 @@
     return face?.image_uris?.art_crop || '';
   }
 
-  function loadArtworkUrl(url, label = 'Artwork', mode = 'art') {
+  function loadArtworkUrl(url, label = 'Artwork', mode = 'art', shouldApply = () => true) {
     if (!url || !state.canvas) return Promise.resolve(false);
     return new Promise((resolve) => {
       fabric.Image.fromURL(url, (img) => {
+        if (!shouldApply()) {
+          resolve(false);
+          return;
+        }
         if (!img) {
           setStatus(`${label} konnte nicht geladen werden.`, true);
           resolve(false);
@@ -1136,6 +1143,126 @@
     // Normale Karten bleiben im klassischen Artwork-Bereich.
     const mode = sourceCard?.full_art ? 'fullart' : 'art';
     return loadArtworkUrl(url, 'Artwork', mode);
+  }
+
+  function getCardArtworkEntries(card) {
+    if (!card) return [];
+    if (card.image_uris?.art_crop) {
+      return [{ url: card.image_uris.art_crop, faceName: card.name || '' }];
+    }
+    return (card.card_faces || [])
+      .filter(face => face.image_uris?.art_crop)
+      .map(face => ({ url: face.image_uris.art_crop, faceName: face.name || card.name || '' }));
+  }
+
+  function closeArtworkPicker() {
+    const menu = $('artworkPickerMenu');
+    const button = $('artworkPickerBtn');
+    if (menu) menu.hidden = true;
+    if (button) button.setAttribute('aria-expanded', 'false');
+  }
+
+  function renderArtworkPicker() {
+    const choices = state.artworkChoices;
+    const index = state.artworkChoiceIndex;
+    const current = choices[index];
+    const button = $('artworkPickerBtn');
+    const thumb = $('artworkPickerThumb');
+    const label = $('artworkPickerLabel');
+    const menu = $('artworkPickerMenu');
+    if (!button || !thumb || !label || !menu) return;
+
+    button.disabled = !choices.length;
+    $('previousArtworkBtn').disabled = index <= 0;
+    $('nextArtworkBtn').disabled = index < 0 || index >= choices.length - 1;
+    label.textContent = current ? current.label : 'Keine Crop-Artworks gefunden';
+    thumb.hidden = !current;
+    if (current) thumb.src = current.url;
+    else thumb.removeAttribute('src');
+    $('artworkGalleryStatus').textContent = current
+      ? `Artwork ${index + 1} von ${choices.length}${current.artist ? ` · ${current.artist}` : ''}`
+      : 'Für diese Karte wurden keine Crop-Artworks gefunden.';
+
+    menu.innerHTML = '';
+    choices.forEach((choice, choiceIndex) => {
+      const option = document.createElement('button');
+      option.type = 'button';
+      option.className = `artwork-picker-option${choiceIndex === index ? ' selected' : ''}`;
+      option.setAttribute('role', 'option');
+      option.setAttribute('aria-selected', choiceIndex === index ? 'true' : 'false');
+
+      const image = document.createElement('img');
+      image.src = choice.url;
+      image.alt = '';
+      image.loading = 'lazy';
+      const text = document.createElement('span');
+      const title = document.createElement('strong');
+      title.textContent = choice.label;
+      const details = document.createElement('small');
+      details.textContent = choice.artist || choice.faceName || '';
+      text.append(title, details);
+      option.append(image, text);
+      option.addEventListener('click', () => selectArtworkChoice(choiceIndex));
+      menu.appendChild(option);
+    });
+  }
+
+  function populateArtworkChoices(selectedCard) {
+    const selectedUrl = getCardArtworkUrl(selectedCard);
+    const seen = new Set();
+    const cards = [selectedCard, ...state.printings].filter(Boolean);
+    state.artworkChoices = [];
+
+    for (const card of cards) {
+      for (const entry of getCardArtworkEntries(card)) {
+        if (!entry.url || seen.has(entry.url)) continue;
+        seen.add(entry.url);
+        const setName = card.set_name || String(card.set || '').toUpperCase() || 'Unbekannte Edition';
+        const number = card.collector_number ? ` #${card.collector_number}` : '';
+        const faceSuffix = card.card_faces?.length > 1 && entry.faceName ? ` · ${entry.faceName}` : '';
+        state.artworkChoices.push({
+          ...entry,
+          label: `${setName}${number}${faceSuffix}`,
+          artist: card.artist || card.card_faces?.find(face => face.name === entry.faceName)?.artist || '',
+          mode: card.full_art ? 'fullart' : 'art',
+        });
+      }
+    }
+
+    state.artworkChoiceIndex = Math.max(0, state.artworkChoices.findIndex(choice => choice.url === selectedUrl));
+    if (!state.artworkChoices.length) state.artworkChoiceIndex = -1;
+    closeArtworkPicker();
+    renderArtworkPicker();
+  }
+
+  async function selectArtworkChoice(index) {
+    const choice = state.artworkChoices[index];
+    if (!choice || index === state.artworkChoiceIndex) {
+      closeArtworkPicker();
+      return;
+    }
+    const requestId = ++state.artworkChoiceRequestId;
+    closeArtworkPicker();
+    $('artworkGalleryStatus').textContent = `${choice.label} wird geladen …`;
+    $('previousArtworkBtn').disabled = true;
+    $('nextArtworkBtn').disabled = true;
+    const loaded = await loadArtworkUrl(
+      choice.url,
+      choice.label,
+      choice.mode,
+      () => requestId === state.artworkChoiceRequestId,
+    );
+    if (requestId !== state.artworkChoiceRequestId) return;
+    if (loaded) state.artworkChoiceIndex = index;
+    renderArtworkPicker();
+  }
+
+  function resetArtworkChoices() {
+    state.artworkChoiceRequestId += 1;
+    state.artworkChoices = [];
+    state.artworkChoiceIndex = -1;
+    closeArtworkPicker();
+    renderArtworkPicker();
   }
 
   async function fetchJson(url) {
@@ -1497,6 +1624,7 @@
       return;
     }
     setStatus(`Suche „${query}“ …`);
+    resetArtworkChoices();
     try {
       const base = await fetchJson(`${API}/cards/named?fuzzy=${encodeURIComponent(query)}`);
       state.cardBase = base;
@@ -1594,6 +1722,7 @@
     updateOriginalCard(card, card.lang || lang);
     const autoFrame = autoSelectFrameForCard(card);
     await loadCardArtwork(card);
+    populateArtworkChoices(card);
     // Frame und Artwork laden asynchron. Danach Overlays nochmals für exakt
     // die aktuell geladene Karte setzen, damit kein alter Request sichtbar bleibt.
     loadHoloStampForCard(card);
@@ -2087,6 +2216,17 @@
       if (state.localizedCard) setTimeout(() => autoSelectFrameForCard(state.localizedCard), 0);
     });
     $('artUpload').addEventListener('change', e => loadArtworkFile(e.target.files?.[0]));
+    $('artworkPickerBtn').addEventListener('click', () => {
+      const menu = $('artworkPickerMenu');
+      const willOpen = menu.hidden;
+      menu.hidden = !willOpen;
+      $('artworkPickerBtn').setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    });
+    $('previousArtworkBtn').addEventListener('click', () => selectArtworkChoice(state.artworkChoiceIndex - 1));
+    $('nextArtworkBtn').addEventListener('click', () => selectArtworkChoice(state.artworkChoiceIndex + 1));
+    document.addEventListener('click', event => {
+      if (!event.target.closest('.artwork-picker')) closeArtworkPicker();
+    });
     $('fitArtBtn').addEventListener('click', fitArtwork);
     $('sendArtBackBtn').addEventListener('click', () => {
       if (!state.artwork) return;
@@ -2203,4 +2343,3 @@
 
   init();
 })();
-

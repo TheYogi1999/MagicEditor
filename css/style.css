@@ -235,6 +235,39 @@ option{color:var(--text);background:#101822}
   border-radius:11px;
   background:rgba(7,12,18,.25);
 }
+.artwork-picker{position:relative}
+.artwork-picker-btn{
+  width:100%;min-height:58px;padding:6px 9px;
+  display:grid;grid-template-columns:42px minmax(0,1fr) auto;
+  align-items:center;gap:9px;text-align:left;
+}
+.artwork-picker-btn img{
+  width:42px;height:42px;object-fit:cover;border-radius:6px;
+  border:1px solid rgba(139,185,232,.45);background:#111923;
+}
+.artwork-picker-btn img[hidden]{display:block;visibility:hidden}
+.artwork-picker-btn > span:not(.artwork-picker-arrow){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.artwork-picker-arrow{font-size:16px;color:var(--muted)}
+.artwork-picker-menu{
+  position:absolute;z-index:50;top:calc(100% + 5px);left:0;right:0;
+  max-height:330px;overflow-y:auto;padding:5px;
+  border:1px solid rgba(104,170,255,.52);border-radius:10px;
+  background:#101923;box-shadow:0 12px 30px rgba(0,0,0,.48);
+}
+.artwork-picker-option{
+  width:100%;padding:6px;display:grid;
+  grid-template-columns:58px minmax(0,1fr);gap:9px;align-items:center;
+  border-color:transparent;background:transparent;text-align:left;
+}
+.artwork-picker-option:hover,.artwork-picker-option.selected{
+  background:rgba(74,139,210,.2);border-color:rgba(104,170,255,.35);
+}
+.artwork-picker-option img{
+  width:58px;height:44px;object-fit:cover;border-radius:6px;background:#111923;
+}
+.artwork-picker-option strong,.artwork-picker-option small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.artwork-picker-option small{margin-top:3px;color:var(--muted);font-size:10px}
+.artwork-gallery-nav button{flex:1}
 .controls section{margin-bottom:10px}
 .controls section > h2{margin-bottom:5px}
 .field-grid{align-items:start}

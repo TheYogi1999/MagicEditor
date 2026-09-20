@@ -143,6 +143,24 @@
         </div>
 
         <p class="hint">Alle eingebauten neuen und alten Frames stehen in „Rahmen-Vorlage“. Mit Neu/Alt kannst du schnell den Stil wechseln; beim Kartenladen wird innerhalb des gewählten Stils automatisch der passende Farb-Frame gewählt. Unterstützt werden jetzt alle 10 Zweifarb-Frames (WU, WB, RW, GW, UB, UR, GU, BR, BG, RG), die entsprechenden Land-Frames, Multicolor, Artifact sowie Vehicle.png.</p>
+
+        <div class="subcard artwork-gallery">
+          <label>Alternative Crop-Artworks</label>
+          <div class="artwork-picker">
+            <button id="artworkPickerBtn" class="artwork-picker-btn" type="button" aria-haspopup="listbox" aria-expanded="false" disabled>
+              <img id="artworkPickerThumb" alt="" hidden />
+              <span id="artworkPickerLabel">Erst Karte suchen …</span>
+              <span class="artwork-picker-arrow" aria-hidden="true">▾</span>
+            </button>
+            <div id="artworkPickerMenu" class="artwork-picker-menu" role="listbox" aria-label="Crop-Artwork auswählen" hidden></div>
+          </div>
+          <div class="row artwork-gallery-nav">
+            <button id="previousArtworkBtn" type="button" disabled>← Zurück</button>
+            <button id="nextArtworkBtn" type="button" disabled>Weiter →</button>
+          </div>
+          <p id="artworkGalleryStatus" class="mini-status">Alle verfügbaren Scryfall-Artworks der geladenen Karte.</p>
+        </div>
+
         <label class="file-btn wide">Eigenes Artwork hochladen<input id="artUpload" type="file" accept="image/*" /></label>
         <div class="row wrap">
           <button id="sendArtBackBtn">Artwork nach hinten</button>
