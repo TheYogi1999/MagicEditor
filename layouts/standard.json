@@ -23,6 +23,9 @@
       "opacity": 1
     }
   },
+  "holoStamp": {
+    "enabled": true
+  },
   "setSymbol": {
     "enabled": true,
     "setCode": "prm",

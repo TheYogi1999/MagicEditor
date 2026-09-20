@@ -16,6 +16,9 @@
     "key": "M",
     "transform": null
   },
+  "holoStamp": {
+    "enabled": false
+  },
   "setSymbol": {
     "enabled": false,
     "setCode": "sld",
@@ -36,8 +39,8 @@
       "width": 650,
       "anchorRight": false,
       "fontSize": 40,
-      "fontFamily": "MPlantin",
-      "fontWeight": "700",
+      "fontFamily": "Almendra",
+      "fontWeight": "normal",
       "fontStyle": "normal",
       "fill": "#f4f3ee",
       "textAlign": "left",
@@ -53,8 +56,8 @@
       "width": 720,
       "anchorRight": false,
       "fontSize": 35,
-      "fontFamily": "MPlantin",
-      "fontWeight": "600",
+      "fontFamily": "Almendra",
+      "fontWeight": "normal",
       "fontStyle": "normal",
       "fill": "#f4f3ee",
       "textAlign": "left",

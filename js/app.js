@@ -1545,6 +1545,24 @@
       if (!preset.preferredFrameStyle) {
         preset.preferredFrameStyle = key === 'vintage' ? 'vintage' : 'new';
       }
+      // Das eingebaute Vintage-Layout verwendet den historischen Schriftstil
+      // und blendet moderne Rahmen-Overlays automatisch aus.
+      if (key === 'vintage') {
+        await ensureFontLoaded('Almendra');
+        preset.fields = preset.fields || {};
+        for (const fieldKey of ['title', 'type']) {
+          preset.fields[fieldKey] = {
+            ...(preset.fields[fieldKey] || {}),
+            fontFamily: 'Almendra',
+            fontWeight: 'normal',
+          };
+        }
+        preset.legendCrown = { ...(preset.legendCrown || {}), enabled: false };
+        preset.holoStamp = { ...(preset.holoStamp || {}), enabled: false };
+      } else if (!preset.holoStamp) {
+        // Alte Standard-Layouts kennen den Stamp-Zustand noch nicht.
+        preset.holoStamp = { enabled: true };
+      }
       applyLayout(preset);
 
       // Bereits geladenes Artwork bleibt exakt an seiner aktuellen Position/Skalierung.
@@ -1865,6 +1883,9 @@
           angle: state.legendCrown.angle, opacity: state.legendCrown.opacity
         } : null
       },
+      holoStamp: {
+        enabled: !!state.holoStampEnabled
+      },
       setSymbol: {
         enabled: !!state.setSymbolEnabled,
         setCode: state.setSymbolSetCode || '',
@@ -1917,7 +1938,12 @@
         try { localStorage.setItem(LEGEND_CROWN_POS_KEY, JSON.stringify(data.legendCrown.transform)); } catch (_) {}
       }
       loadLegendCrownForCard(state.localizedCard || state.cardBase);
-      loadHoloStampForCard(state.localizedCard || state.cardBase);
+    }
+    if (data.holoStamp) {
+      state.holoStampEnabled = data.holoStamp.enabled !== false;
+      if ($('holoStampToggle')) $('holoStampToggle').checked = state.holoStampEnabled;
+      if (state.holoStampEnabled) loadHoloStampForCard(state.localizedCard || state.cardBase);
+      else removeHoloStamp();
     }
     if (data.setSymbol) {
       state.setSymbolEnabled = !!data.setSymbol.enabled;
