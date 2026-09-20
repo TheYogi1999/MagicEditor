@@ -191,7 +191,7 @@
       <section class="ui-panel" data-ui-group="text">
         <h2>Ausgewähltes Element</h2>
         <div class="field-grid compact">
-          <label>Schriftart<select id="fontFamily"><option value="Matrix Bold">Matrix Bold (mtg-font, MIT)</option><option value="MPlantin">MPlantin (mtg-font, MIT)</option><option value="Arial">Arial (lokal)</option><option value="Georgia">Georgia (lokal)</option><option value="Times New Roman">Times New Roman (lokal)</option><option value="Cinzel">Cinzel (GitHub)</option><option value="EB Garamond">EB Garamond (GitHub)</option><option value="Noto Serif">Noto Serif (GitHub)</option></select></label>
+          <label>Schriftart<select id="fontFamily"><option value="Matrix Bold">Matrix Bold (mtg-font, MIT)</option><option value="MPlantin">MPlantin (mtg-font, MIT)</option><option value="Almendra">Almendra (Google Fonts, OFL)</option><option value="Arial">Arial (lokal)</option><option value="Georgia">Georgia (lokal)</option><option value="Times New Roman">Times New Roman (lokal)</option><option value="Cinzel">Cinzel (GitHub)</option><option value="EB Garamond">EB Garamond (GitHub)</option><option value="Noto Serif">Noto Serif (GitHub)</option></select></label>
           <label>Schriftgröße<input id="fontSize" type="number" min="6" max="160" step="1" /></label>
           <label>Textbox-Breite<input id="textWidth" type="number" min="40" max="980" step="1" /></label>
           <label>Deckkraft<input id="opacity" type="number" min="0.1" max="1" step="0.05" /></label>
@@ -205,9 +205,9 @@
             Textfarbe automatisch an Hintergrund anpassen
           </label>
         </div>
-        <div class="row wrap"><button id="mtgFontPresetBtn">MTG-Schriftstil laden</button><button id="reloadSymbolsBtn">Mana-Symbole neu laden</button><label class="file-btn">Eigene Schrift laden<input id="fontUpload" type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" /></label></div>
+        <div class="row wrap"><button id="mtgFontPresetBtn">MTG-Schriftstil laden</button><button id="almendraPresetBtn">Almendra für Namen</button><button id="reloadSymbolsBtn">Mana-Symbole neu laden</button><label class="file-btn">Eigene Schrift laden<input id="fontUpload" type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" /></label></div>
         <div id="fontStatus" class="mini-status"></div><p class="hint">Für Kartentext: zuerst den Kartentextblock auf der Karte anklicken, dann hier Schriftart/Größe ändern.</p>
-        <p class="hint">Matrix Bold und MPlantin stammen aus dem MIT-lizenzierten Projekt mtg-font von Alexandre Arpin und werden bei Bedarf geladen. Lizenzhinweis: third_party/mtg-font/LICENSE. Eigene TTF/OTF/WOFF-Dateien können weiterhin lokal geladen werden. Mana-, Hybrid-, Phyrexian-, Tap- und Untap-Symbole werden live geladen und im Browser zwischengespeichert.</p>
+        <p class="hint">Matrix Bold und MPlantin stammen aus dem MIT-lizenzierten Projekt mtg-font von Alexandre Arpin. Almendra stammt aus Google Fonts und steht unter der SIL Open Font License. Die Schriften werden bei Bedarf geladen. Lizenzhinweis für mtg-font: third_party/mtg-font/LICENSE. Eigene TTF/OTF/WOFF-Dateien können weiterhin lokal geladen werden. Mana-, Hybrid-, Phyrexian-, Tap- und Untap-Symbole werden live geladen und im Browser zwischengespeichert.</p>
         <div class="row wrap">
           <button id="bringForwardBtn">Eine Ebene vor</button>
           <button id="sendBackwardBtn">Eine Ebene zurück</button>
