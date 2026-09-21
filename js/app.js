@@ -450,16 +450,18 @@
 
   function updateTextFieldInteraction(obj) {
     if (!obj) return;
-    const interactive = !state.textFieldsLocked && obj.visible !== false;
+    const visible = obj.visible !== false;
     obj.set({
-      selectable: interactive,
-      evented: interactive,
-      lockMovementX: !interactive,
-      lockMovementY: !interactive,
-      lockScalingX: !interactive,
-      lockScalingY: !interactive,
-      lockRotation: !interactive,
-      hasControls: interactive,
+      // Gesperrte Textfelder bleiben auswählbar, damit Text und Schriftstil
+      // weiterhin bearbeitet werden können. Nur die Box-Geometrie ist fixiert.
+      selectable: visible,
+      evented: visible,
+      lockMovementX: state.textFieldsLocked,
+      lockMovementY: state.textFieldsLocked,
+      lockScalingX: state.textFieldsLocked,
+      lockScalingY: state.textFieldsLocked,
+      lockRotation: state.textFieldsLocked,
+      hasControls: !state.textFieldsLocked,
     });
     obj.setCoords();
   }
@@ -469,20 +471,11 @@
     const toggle = $('textFieldsLockToggle');
     if (toggle) toggle.checked = state.textFieldsLocked;
 
-    const textObjects = Object.values(state.fields);
-    const active = state.canvas?.getActiveObject();
-    textObjects.forEach(updateTextFieldInteraction);
-    if (state.textFieldsLocked && active && textObjects.includes(active)) {
-      state.canvas.discardActiveObject();
-      if (state.artwork) {
-        state.artwork.setCoords();
-        state.canvas.setActiveObject(state.artwork);
-      }
-    }
+    Object.values(state.fields).forEach(updateTextFieldInteraction);
     state.canvas?.requestRenderAll();
     if (showStatus) {
       setStatus(state.textFieldsLocked
-        ? 'Alle Textfelder sind gesperrt. Das Artwork kann direkt bewegt werden.'
+        ? 'Position und Größe aller Textfelder sind gesperrt. Der Text bleibt bearbeitbar.'
         : 'Textfelder sind wieder entsperrt.');
     }
   }
