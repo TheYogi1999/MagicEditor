@@ -2058,30 +2058,39 @@
 
   function exportPng() {
     if (!state.canvas) return;
+    const requestedMultiplier = Number($('exportScaleSelect')?.value || 2);
+    const multiplier = [1, 2, 4].includes(requestedMultiplier) ? requestedMultiplier : 2;
     const currentZoom = state.canvas.getZoom();
     const currentW = state.canvas.getWidth();
     const currentH = state.canvas.getHeight();
     const currentVpt = state.canvas.viewportTransform ? [...state.canvas.viewportTransform] : null;
 
-    state.canvas.setZoom(1);
-    state.canvas.setWidth(CANVAS_W);
-    state.canvas.setHeight(CANVAS_H);
-    state.canvas.viewportTransform = [1,0,0,1,0,0];
-    state.canvas.discardActiveObject();
-    state.canvas.renderAll();
-
-    const data = state.canvas.toDataURL({ format:'png', multiplier:1 });
-
-    state.canvas.setZoom(currentZoom);
-    state.canvas.setWidth(currentW);
-    state.canvas.setHeight(currentH);
-    if (currentVpt) state.canvas.viewportTransform = currentVpt;
-    state.canvas.requestRenderAll();
+    let data;
+    try {
+      state.canvas.setZoom(1);
+      state.canvas.setWidth(CANVAS_W);
+      state.canvas.setHeight(CANVAS_H);
+      state.canvas.viewportTransform = [1,0,0,1,0,0];
+      state.canvas.discardActiveObject();
+      state.canvas.renderAll();
+      data = state.canvas.toDataURL({ format:'png', multiplier });
+    } catch (error) {
+      console.error(error);
+      setStatus('PNG-Export fehlgeschlagen. Bitte eine kleinere Auflösung versuchen.', true);
+      return;
+    } finally {
+      state.canvas.setZoom(currentZoom);
+      state.canvas.setWidth(currentW);
+      state.canvas.setHeight(currentH);
+      if (currentVpt) state.canvas.viewportTransform = currentVpt;
+      state.canvas.requestRenderAll();
+    }
 
     const a = document.createElement('a');
     a.href = data;
-    a.download = `${($('titleInput').value || 'karte').replace(/[^\w\-]+/g,'_')}.png`;
+    a.download = `${safeName($('titleInput').value || 'karte')}_${multiplier}x.png`;
     a.click();
+    setStatus(`PNG mit ${CANVAS_W * multiplier} × ${CANVAS_H * multiplier} Pixeln exportiert.`);
   }
 
   async function loadTemplateManifest() {

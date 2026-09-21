@@ -242,6 +242,14 @@
 
       <section class="ui-panel" data-ui-group="layout">
         <h2>Export</h2>
+        <label>PNG-Auflösung
+          <select id="exportScaleSelect">
+            <option value="1">1× — 1005 × 1407 px</option>
+            <option value="2" selected>2× — 2010 × 2814 px</option>
+            <option value="4">4× — 4020 × 5628 px</option>
+          </select>
+        </label>
+        <p class="hint">2× ist für die meisten Zwecke empfohlen. 4× erzeugt eine deutlich größere Datei.</p>
         <button id="exportBtn" class="primary wide">Karte als PNG exportieren</button>
       </section>
     </aside>
