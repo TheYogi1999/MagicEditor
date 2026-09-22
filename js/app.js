@@ -27,6 +27,7 @@
     artworkChoiceIndex: -1,
     artworkChoiceRequestId: 0,
     textFieldsLocked: false,
+    vintageTextShadowEnabled: false,
     currentSet: '',
     setSymbol: null,
     setSymbolEnabled: true,
@@ -478,6 +479,25 @@
         ? 'Position und Größe aller Textfelder sind gesperrt. Der Text bleibt bearbeitbar.'
         : 'Textfelder sind wieder entsperrt.');
     }
+  }
+
+  function setVintageTextShadows(enabled) {
+    state.vintageTextShadowEnabled = !!enabled;
+    for (const key of ['title', 'type', 'pt']) {
+      const obj = state.fields[key];
+      if (!obj) continue;
+      obj.set('shadow', state.vintageTextShadowEnabled
+        ? new fabric.Shadow({
+            color: 'rgba(0,0,0,0.75)',
+            blur: 2,
+            offsetX: -4,
+            offsetY: 6,
+            affectStroke: false,
+          })
+        : null);
+      obj.setCoords();
+    }
+    state.canvas?.requestRenderAll();
   }
 
 
@@ -1604,6 +1624,7 @@
         }
         preset.legendCrown = { ...(preset.legendCrown || {}), enabled: false };
         preset.holoStamp = { ...(preset.holoStamp || {}), enabled: false };
+        preset.vintageTextShadow = true;
       } else if (!preset.holoStamp) {
         // Alte Standard-Layouts kennen den Stamp-Zustand noch nicht.
         preset.holoStamp = { enabled: true };
@@ -1916,6 +1937,7 @@
       // Verknüpft das Layout mit dem aktuell gewählten Frame-Stil.
       // Beim späteren Laden des Layouts wird dieser Stil automatisch wieder aktiviert.
       preferredFrameStyle: currentFrameStyle || 'new',
+      vintageTextShadow: !!state.vintageTextShadowEnabled,
       flavorEnabled: $('flavorToggle')?.checked !== false,
       autoTextContrast: !!state.autoTextContrast,
       ptBackground: {
@@ -2011,6 +2033,10 @@
       });
     }
     loadHoloStampForCard(state.localizedCard || state.cardBase);
+    const useVintageTextShadow = typeof data.vintageTextShadow === 'boolean'
+      ? data.vintageTextShadow
+      : data.preferredFrameStyle === 'vintage';
+    setVintageTextShadows(useVintageTextShadow);
     state.canvas.requestRenderAll();
     if(typeof data.autoTextContrast==='boolean') setAutoTextContrast(data.autoTextContrast); else scheduleAutoTextContrast(100);
     setStatus(`Layout „${data.name || 'geladen'}“ angewendet`);
