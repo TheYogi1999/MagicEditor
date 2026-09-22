@@ -258,6 +258,10 @@
           "path": "frames/vintage/frame_br.png"
         },
         {
+          "name": "frame_Colorless.png",
+          "path": "frames/vintage/frame_Colorless.png"
+        },
+        {
           "name": "frame_green.png",
           "path": "frames/vintage/frame_green.png"
         },
