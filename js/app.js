@@ -490,8 +490,8 @@
         ? new fabric.Shadow({
             color: 'rgba(0,0,0,0.75)',
             blur: 2,
-            offsetX: -1,
-            offsetY: 1.5,
+            offsetX: 0.5,
+            offsetY: 0.7,
             affectStroke: false,
           })
         : null);
