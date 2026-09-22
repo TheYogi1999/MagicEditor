@@ -488,8 +488,8 @@
       if (!obj) continue;
       obj.set('shadow', state.vintageTextShadowEnabled
         ? new fabric.Shadow({
-            color: 'rgba(0,0,0,0.75)',
-            blur: 2,
+            color: 'rgba(0,0,0,0.95)',
+            blur: 4,
             offsetX: 0.5,
             offsetY: 0.7,
             affectStroke: false,
