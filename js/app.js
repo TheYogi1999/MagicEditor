@@ -73,7 +73,12 @@
   };
 
   const DEFAULT_SET_SYMBOL_LAYOUT = { left: 888.119819580301, top: 831.2668294567007, width: 62, height: 62, scaleX: 0.032914973847774524, scaleY: 0.032914973847774524, angle: 0, opacity: 1 };
-  const RARITY_COLORS = { common:'#1f1f1f', uncommon:'#8f9aa3', rare:'#c7a64b', mythic:'#d96b2b' };
+  const RARITY_TEXTURES = {
+    common:   ['#626262', '#1f1f1f', '#080808', '#3b3b3b', '#111111'],
+    uncommon: ['#eef3f6', '#8f9aa3', '#58636a', '#c9d1d6', '#707b82'],
+    rare:     ['#fff0a3', '#c7a64b', '#80631d', '#e6ca72', '#9a7727'],
+    mythic:   ['#ffc18a', '#d96b2b', '#7c2c15', '#ed8a49', '#a33e1d'],
+  };
   const BUILTIN_LAYOUTS = {
     standard: {"version": 1, "name": "Mein Layout", "canvas": {"width": 1005, "height": 1407}, "flavorEnabled": true, "ptBackground": {"enabled": true}, "legendCrown": {"enabled": true, "key": "", "transform": null}, "setSymbol": {"enabled": true, "setCode": "msc", "rarity": "uncommon", "transform": {"left": 886.5896774387934, "top": 828.6460930828756, "scaleX": 0.043398173896560824, "scaleY": 0.043398173896560824, "angle": 0, "opacity": 1}}, "fields": {"title": {"left": 78.3554763559591, "top": 85.46956038206685, "width": 650, "anchorRight": false, "fontSize": 40, "fontFamily": "Arial", "fontWeight": "700", "fontStyle": "normal", "fill": "#111111", "textAlign": "left", "lineHeight": 1.16, "angle": 0, "scaleX": 1, "scaleY": 1, "opacity": 1}, "type": {"left": 82.47217272247437, "top": 807.8223547223622, "width": 720, "anchorRight": false, "fontSize": 40, "fontFamily": "Arial", "fontWeight": "600", "fontStyle": "normal", "fill": "#111111", "textAlign": "left", "lineHeight": 1.16, "angle": 0, "scaleX": 1.051199210993726, "scaleY": 1.051199210993726, "opacity": 1}, "flavor": {"left": 95, "top": 1153, "width": 720, "anchorRight": false, "fontSize": 24, "fontFamily": "Arial", "fontWeight": "normal", "fontStyle": "italic", "fill": "#222222", "textAlign": "left", "lineHeight": 1.05, "angle": 0, "scaleX": 1.1291899266335503, "scaleY": 1.1291899266335503, "opacity": 1}, "pt": {"left": 804.8806100052782, "top": 1275.172652847677, "width": 120, "anchorRight": false, "fontSize": 36, "fontFamily": "Arial", "fontWeight": "700", "fontStyle": "normal", "fill": "#111111", "textAlign": "center", "lineHeight": 1.16, "angle": 0, "scaleX": 1, "scaleY": 1, "opacity": 1}, "mana": {"left": 928.5861754607834, "top": 83.76397170147631, "width": 190.40000000000003, "anchorRight": true, "fontSize": 34, "fontFamily": "Arial", "fill": "#111111", "textAlign": "right", "lineHeight": 1.08, "angle": 0, "scaleX": 1.193944313912175, "scaleY": 1.193944313912175, "opacity": 1}, "rules": {"left": 95, "top": 905, "width": 720, "anchorRight": false, "fontSize": 29, "fontFamily": "Arial", "fill": "#111111", "textAlign": "left", "lineHeight": 1.08, "angle": 0, "scaleX": 1.141719483084871, "scaleY": 1.141719483084871, "opacity": 1}}, "artwork": {"left": 71, "top": 152.491214057508, "scaleX": 1.378594249201278, "scaleY": 1.378594249201278, "angle": 0, "opacity": 1}},
     vintage: {"version": 1, "name": "Mein Layout", "canvas": {"width": 1005, "height": 1407}, "flavorEnabled": true, "ptBackground": {"enabled": true}, "legendCrown": {"enabled": false, "key": "M", "transform": null}, "setSymbol": {"enabled": false, "setCode": "sld", "rarity": "mythic", "transform": {"left": 903.7223095555328, "top": 811.1605305746092, "scaleX": 0.055667820431995314, "scaleY": 0.055667820431995314, "angle": 0, "opacity": 1}}, "fields": {"title": {"left": 91.8833036334847, "top": 67.88323395822842, "width": 650, "anchorRight": false, "fontSize": 40, "fontFamily": "Arial", "fontWeight": "700", "fontStyle": "normal", "fill": "#111111", "textAlign": "left", "lineHeight": 1.16, "angle": 0, "scaleX": 1, "scaleY": 1, "opacity": 1}, "type": {"left": 110.88061000527802, "top": 786.177645277638, "width": 720, "anchorRight": false, "fontSize": 40, "fontFamily": "Arial", "fontWeight": "600", "fontStyle": "normal", "fill": "#111111", "textAlign": "left", "lineHeight": 1.16, "angle": 0, "scaleX": 1.051199210993726, "scaleY": 1.051199210993726, "opacity": 1}, "flavor": {"left": 138.28904728808152, "top": 1130.0024962149805, "width": 720, "anchorRight": false, "fontSize": 24, "fontFamily": "Arial", "fontWeight": "normal", "fontStyle": "italic", "fill": "#222222", "textAlign": "left", "lineHeight": 1.05, "angle": 0, "scaleX": 1.0280935515165324, "scaleY": 1.0280935515165324, "opacity": 1}, "pt": {"left": 807.5861754607832, "top": 1271.1142698267913, "width": 120, "anchorRight": false, "fontSize": 36, "fontFamily": "Arial", "fontWeight": "700", "fontStyle": "normal", "fill": "#111111", "textAlign": "center", "lineHeight": 1.16, "angle": 0, "scaleX": 1, "scaleY": 1, "opacity": 1}, "mana": {"left": 924.5278272775256, "top": 67.53043961793313, "width": 190.40000000000003, "anchorRight": true, "fontSize": 34, "fontFamily": "Arial", "fill": "#111111", "textAlign": "right", "lineHeight": 1.08, "angle": 0, "scaleX": 1.193944313912175, "scaleY": 1.193944313912175, "opacity": 1}, "rules": {"left": 120.70287182729862, "top": 865.7689641314371, "width": 720, "anchorRight": false, "fontSize": 29, "fontFamily": "Arial", "fill": "#111111", "textAlign": "left", "lineHeight": 1.08, "angle": 0, "scaleX": 1.0428159108622534, "scaleY": 1.0428159108622534, "opacity": 1}}, "artwork": {"left": -461.15645514223195, "top": 0, "scaleX": 3.078774617067834, "scaleY": 3.078774617067834, "angle": 0, "opacity": 1}}
@@ -1340,11 +1345,6 @@
     return res.json();
   }
 
-
-  function setSymbolColorForRarity(rarity) {
-    return RARITY_COLORS[rarity] || RARITY_COLORS.common;
-  }
-
   async function getSetInfo(code) {
     code = String(code || '').toLowerCase();
     if (!code) return null;
@@ -1359,17 +1359,42 @@
     }
   }
 
-  function colorizeSetSvg(svgText, color) {
+  function colorizeSetSvg(svgText, rarity) {
     try {
       const doc = new DOMParser().parseFromString(svgText, 'image/svg+xml');
       const root = doc.documentElement;
+      const svgNs = 'http://www.w3.org/2000/svg';
+      const palette = RARITY_TEXTURES[rarity] || RARITY_TEXTURES.common;
+      const gradientId = 'set-symbol-metallic';
+      const defs = doc.createElementNS(svgNs, 'defs');
+      const gradient = doc.createElementNS(svgNs, 'linearGradient');
+      gradient.setAttribute('id', gradientId);
+      gradient.setAttribute('x1', '0%');
+      gradient.setAttribute('y1', '0%');
+      gradient.setAttribute('x2', '100%');
+      gradient.setAttribute('y2', '100%');
+      [
+        ['0%', palette[0]],
+        ['28%', palette[1]],
+        ['52%', palette[2]],
+        ['74%', palette[3]],
+        ['100%', palette[4]],
+      ].forEach(([offset, color]) => {
+        const stop = doc.createElementNS(svgNs, 'stop');
+        stop.setAttribute('offset', offset);
+        stop.setAttribute('stop-color', color);
+        gradient.appendChild(stop);
+      });
+      defs.appendChild(gradient);
+      root.insertBefore(defs, root.firstChild);
+
       root.querySelectorAll('path,polygon,polyline,circle,ellipse,rect,line').forEach(el => {
         const fill = el.getAttribute('fill');
         const stroke = el.getAttribute('stroke');
-        if (fill !== 'none') el.setAttribute('fill', color);
-        if (stroke && stroke !== 'none') el.setAttribute('stroke', color);
+        if (fill !== 'none') el.setAttribute('fill', `url(#${gradientId})`);
+        if (stroke && stroke !== 'none') el.setAttribute('stroke', palette[2]);
       });
-      root.setAttribute('fill', color);
+      root.setAttribute('fill', `url(#${gradientId})`);
       return new XMLSerializer().serializeToString(root);
     } catch (_) {
       return svgText;
@@ -1410,7 +1435,7 @@
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const rawSvg = await res.text();
       if (requestId !== state.setSymbolRequestId) return false;
-      const coloredSvg = colorizeSetSvg(rawSvg, setSymbolColorForRarity(rarity));
+      const coloredSvg = colorizeSetSvg(rawSvg, rarity);
 
       return await new Promise((resolve) => {
         fabric.loadSVGFromString(coloredSvg, (objects, options) => {
@@ -1433,7 +1458,14 @@
             visible: !!state.setSymbolEnabled,
             selectable: !!state.setSymbolEnabled,
             evented: !!state.setSymbolEnabled,
-            objectCaching: false
+            objectCaching: false,
+            shadow: new fabric.Shadow({
+              color: 'rgba(0,0,0,0.45)',
+              blur: 2,
+              offsetX: 0.8,
+              offsetY: 1.2,
+              affectStroke: false,
+            })
           });
 
           if (old && old !== group) state.canvas.remove(old);
