@@ -1366,6 +1366,12 @@
       const svgNs = 'http://www.w3.org/2000/svg';
       const palette = RARITY_TEXTURES[rarity] || RARITY_TEXTURES.common;
       const gradientId = 'set-symbol-metallic';
+      const viewBox = String(root.getAttribute('viewBox') || '')
+        .trim().split(/[\s,]+/).map(Number);
+      const symbolSize = viewBox.length === 4 && viewBox.every(Number.isFinite)
+        ? Math.max(Math.abs(viewBox[2]), Math.abs(viewBox[3]))
+        : Math.max(parseFloat(root.getAttribute('width')) || 1000, parseFloat(root.getAttribute('height')) || 1000);
+      const outlineWidth = Math.max(1, symbolSize * 0.015);
       const defs = doc.createElementNS(svgNs, 'defs');
       const gradient = doc.createElementNS(svgNs, 'linearGradient');
       gradient.setAttribute('id', gradientId);
@@ -1391,8 +1397,18 @@
       root.querySelectorAll('path,polygon,polyline,circle,ellipse,rect,line').forEach(el => {
         const fill = el.getAttribute('fill');
         const stroke = el.getAttribute('stroke');
-        if (fill !== 'none') el.setAttribute('fill', `url(#${gradientId})`);
-        if (stroke && stroke !== 'none') el.setAttribute('stroke', palette[2]);
+        if (fill !== 'none') {
+          el.setAttribute('fill', `url(#${gradientId})`);
+          el.setAttribute('stroke', '#050505');
+          el.setAttribute('stroke-width', String(outlineWidth));
+          el.setAttribute('stroke-linejoin', 'round');
+          el.setAttribute('stroke-linecap', 'round');
+        } else if (stroke && stroke !== 'none') {
+          el.setAttribute('stroke', '#050505');
+          el.setAttribute('stroke-width', String(outlineWidth));
+          el.setAttribute('stroke-linejoin', 'round');
+          el.setAttribute('stroke-linecap', 'round');
+        }
       });
       root.setAttribute('fill', `url(#${gradientId})`);
       return new XMLSerializer().serializeToString(root);
