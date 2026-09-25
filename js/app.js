@@ -376,6 +376,10 @@
     state.landWatermarkKey = '';
   }
 
+  function landWatermarkTop() {
+    return currentFrameStyle === 'vintage' ? -30 : 0;
+  }
+
   function refreshRulesDisplay(card = state.localizedCard || state.cardBase) {
     if (!state.canvas) return;
     const key = basicLandWatermarkKey(card);
@@ -392,7 +396,7 @@
     fabric.Image.fromURL(BUILTIN_LAND_WATERMARKS[key], img => {
       if (!img || requestId !== state.landWatermarkRequestId || state.rulesDisplayMode !== 'watermark') return;
       img.set({
-        left: 0, top: 0,
+        left: 0, top: landWatermarkTop(),
         scaleX: CANVAS_W / Math.max(1, img.width),
         scaleY: CANVAS_H / Math.max(1, img.height),
         angle: 0, opacity: 1,
@@ -1754,6 +1758,11 @@
     currentFrameStyle = availableFrameStyles.some(s => s.id === style) ? style : fallback;
     const sel = $('frameStyleSelect');
     if (sel) sel.value = currentFrameStyle;
+    if (state.landWatermark) {
+      state.landWatermark.set('top', landWatermarkTop());
+      state.landWatermark.setCoords();
+      state.canvas?.requestRenderAll();
+    }
     if (autoApply && (state.localizedCard || state.cardBase)) {
       autoSelectFrameForCard(state.localizedCard || state.cardBase);
     }
