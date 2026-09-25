@@ -208,13 +208,9 @@
     if (!card) return '';
     const typeLine = String(card.type_line || card.card_faces?.map(f => f.type_line || '').join(' // ') || '');
     if (/\bPlane\b/i.test(typeLine)) return 'Plane';
-    if (/\bLand\b/i.test(typeLine)) return 'L';
+    if (/\bLand\b/i.test(typeLine)) return colorOverlayKeyForCard(card, true);
     if (/\bArtifact\b/i.test(typeLine)) return 'A';
-    const colors = getOrderedCardColors(card, false);
-    if (!colors.length) return 'C';
-    if (colors.length === 1) return colors[0];
-    if (colors.length === 2) return canonicalPair(colors);
-    return 'M';
+    return colorOverlayKeyForCard(card, false);
   }
 
   function removeHoloStamp() {
@@ -253,12 +249,16 @@
   function nicknameKeyForCard(card) {
     if (!card) return '';
     const typeLine=String(card.type_line || card.card_faces?.map(f=>f.type_line||'').join(' // ') || '');
-    if (/\bLand\b/i.test(typeLine)) return 'L';
+    if (/\bLand\b/i.test(typeLine)) return colorOverlayKeyForCard(card, true);
     if (/\bArtifact\b/i.test(typeLine)) return 'A';
-    const colors=getOrderedCardColors(card,false);
+    return colorOverlayKeyForCard(card, false);
+  }
+
+  function colorOverlayKeyForCard(card, preferIdentity = false) {
+    const colors = getOrderedCardColors(card, preferIdentity);
     if (!colors.length) return 'C';
-    if (colors.length===1) return colors[0];
-    if (colors.length===2) return canonicalPair(colors);
+    if (colors.length === 1) return colors[0];
+    if (colors.length === 2) return canonicalPair(colors);
     return 'M';
   }
 
@@ -1018,6 +1018,19 @@
       // ist aber frame_land_rw.png statt frame_land_wr.png.
       const pair = canonicalPair(colors).toLowerCase();
       return 'land_' + pair;
+    }
+    const useExtendedEnchantment = normalizeFrameFilename(currentFrameStyle) === 'extendedart' && /\bEnchantment\b/i.test(typeLine);
+    if (useExtendedEnchantment) {
+      if (/\bArtifact\b/i.test(typeLine)) return 'enchantment_artifact';
+      const colors = getOrderedCardColors(card, false);
+      // Für ein rein farbloses Nicht-Artefakt-Enchantment existiert kein eigener
+      // Sternen-Frame; dort bleibt der normale farblose ExtendedArt-Frame aktiv.
+      if (!colors.length) return 'colorless';
+      if (colors.length === 1) {
+        return 'enchantment_' + ({W:'white',U:'blue',B:'black',R:'red',G:'green'})[colors[0]];
+      }
+      if (colors.length === 2) return 'enchantment_' + canonicalPair(colors).toLowerCase();
+      return 'enchantment_multicolor';
     }
     if (/\bVehicle\b/i.test(typeLine)) return 'vehicle';
     if (/\bArtifact\b/i.test(typeLine)) return 'artifact';
