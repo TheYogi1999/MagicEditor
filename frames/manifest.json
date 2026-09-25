@@ -84,6 +84,224 @@
       ]
     },
     {
+      "id": "ExtendedArt",
+      "label": "Extendedart",
+      "frames": [
+        {
+          "name": "frame_artifact.png",
+          "path": "frames/ExtendedArt/frame_artifact.png"
+        },
+        {
+          "name": "frame_BG.png",
+          "path": "frames/ExtendedArt/frame_BG.png"
+        },
+        {
+          "name": "frame_black.png",
+          "path": "frames/ExtendedArt/frame_black.png"
+        },
+        {
+          "name": "frame_blue.png",
+          "path": "frames/ExtendedArt/frame_blue.png"
+        },
+        {
+          "name": "frame_BR.png",
+          "path": "frames/ExtendedArt/frame_BR.png"
+        },
+        {
+          "name": "frame_colorless.png",
+          "path": "frames/ExtendedArt/frame_colorless.png"
+        },
+        {
+          "name": "frame_Enchantment_artifact.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_artifact.png"
+        },
+        {
+          "name": "frame_Enchantment_BG.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_BG.png"
+        },
+        {
+          "name": "frame_Enchantment_black.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_black.png"
+        },
+        {
+          "name": "frame_Enchantment_blue.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_blue.png"
+        },
+        {
+          "name": "frame_Enchantment_BR.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_BR.png"
+        },
+        {
+          "name": "frame_Enchantment_green.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_green.png"
+        },
+        {
+          "name": "frame_Enchantment_GU.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_GU.png"
+        },
+        {
+          "name": "frame_Enchantment_GW.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_GW.png"
+        },
+        {
+          "name": "frame_Enchantment_multicolor.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_multicolor.png"
+        },
+        {
+          "name": "frame_Enchantment_red.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_red.png"
+        },
+        {
+          "name": "frame_Enchantment_RG.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_RG.png"
+        },
+        {
+          "name": "frame_Enchantment_RW.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_RW.png"
+        },
+        {
+          "name": "frame_Enchantment_UB.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_UB.png"
+        },
+        {
+          "name": "frame_Enchantment_UR.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_UR.png"
+        },
+        {
+          "name": "frame_Enchantment_WB.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_WB.png"
+        },
+        {
+          "name": "frame_Enchantment_white.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_white.png"
+        },
+        {
+          "name": "frame_Enchantment_WU.png",
+          "path": "frames/ExtendedArt/frame_Enchantment_WU.png"
+        },
+        {
+          "name": "frame_green.png",
+          "path": "frames/ExtendedArt/frame_green.png"
+        },
+        {
+          "name": "frame_GU.png",
+          "path": "frames/ExtendedArt/frame_GU.png"
+        },
+        {
+          "name": "frame_GW.png",
+          "path": "frames/ExtendedArt/frame_GW.png"
+        },
+        {
+          "name": "frame_land.png",
+          "path": "frames/ExtendedArt/frame_land.png"
+        },
+        {
+          "name": "frame_land_BG.png",
+          "path": "frames/ExtendedArt/frame_land_BG.png"
+        },
+        {
+          "name": "frame_land_black.png",
+          "path": "frames/ExtendedArt/frame_land_black.png"
+        },
+        {
+          "name": "frame_land_blue.png",
+          "path": "frames/ExtendedArt/frame_land_blue.png"
+        },
+        {
+          "name": "frame_land_BR.png",
+          "path": "frames/ExtendedArt/frame_land_BR.png"
+        },
+        {
+          "name": "frame_land_green.png",
+          "path": "frames/ExtendedArt/frame_land_green.png"
+        },
+        {
+          "name": "frame_land_GU.png",
+          "path": "frames/ExtendedArt/frame_land_GU.png"
+        },
+        {
+          "name": "frame_land_GW.png",
+          "path": "frames/ExtendedArt/frame_land_GW.png"
+        },
+        {
+          "name": "frame_land_multicolor.png",
+          "path": "frames/ExtendedArt/frame_land_multicolor.png"
+        },
+        {
+          "name": "frame_land_red.png",
+          "path": "frames/ExtendedArt/frame_land_red.png"
+        },
+        {
+          "name": "frame_land_RG.png",
+          "path": "frames/ExtendedArt/frame_land_RG.png"
+        },
+        {
+          "name": "frame_land_rw.png",
+          "path": "frames/ExtendedArt/frame_land_rw.png"
+        },
+        {
+          "name": "frame_land_UB.png",
+          "path": "frames/ExtendedArt/frame_land_UB.png"
+        },
+        {
+          "name": "frame_land_UR.png",
+          "path": "frames/ExtendedArt/frame_land_UR.png"
+        },
+        {
+          "name": "frame_land_WB.png",
+          "path": "frames/ExtendedArt/frame_land_WB.png"
+        },
+        {
+          "name": "frame_land_white.png",
+          "path": "frames/ExtendedArt/frame_land_white.png"
+        },
+        {
+          "name": "frame_land_WU.png",
+          "path": "frames/ExtendedArt/frame_land_WU.png"
+        },
+        {
+          "name": "frame_multicolor.png",
+          "path": "frames/ExtendedArt/frame_multicolor.png"
+        },
+        {
+          "name": "frame_red.png",
+          "path": "frames/ExtendedArt/frame_red.png"
+        },
+        {
+          "name": "frame_RG.png",
+          "path": "frames/ExtendedArt/frame_RG.png"
+        },
+        {
+          "name": "frame_RW.png",
+          "path": "frames/ExtendedArt/frame_RW.png"
+        },
+        {
+          "name": "frame_UB.png",
+          "path": "frames/ExtendedArt/frame_UB.png"
+        },
+        {
+          "name": "frame_UR.png",
+          "path": "frames/ExtendedArt/frame_UR.png"
+        },
+        {
+          "name": "frame_WB.png",
+          "path": "frames/ExtendedArt/frame_WB.png"
+        },
+        {
+          "name": "frame_white.png",
+          "path": "frames/ExtendedArt/frame_white.png"
+        },
+        {
+          "name": "frame_WU.png",
+          "path": "frames/ExtendedArt/frame_WU.png"
+        },
+        {
+          "name": "Vehicle.png",
+          "path": "frames/ExtendedArt/Vehicle.png"
+        }
+      ]
+    },
+    {
       "id": "new",
       "label": "Neu",
       "frames": [
