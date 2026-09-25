@@ -164,7 +164,7 @@
         <label class="file-btn wide">Eigenes Artwork hochladen<input id="artUpload" type="file" accept="image/*" /></label>
         <div class="row wrap">
           <button id="sendArtBackBtn">Artwork nach hinten</button>
-          <button id="fitArtBtn">Bild einpassen</button>
+          <button id="fitArtBtn">Bild einpassen (Breite 445)</button>
         </div>
       </section>
 
@@ -203,10 +203,6 @@
           <label>Textbox-Breite<input id="textWidth" type="number" min="40" max="980" step="1" /></label>
           <label>Deckkraft<input id="opacity" type="number" min="0.1" max="1" step="0.05" /></label>
           <label>Textfarbe<input id="textColor" type="color" value="#111111" /></label>
-          <label style="display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;">
-            <input id="fontItalic" type="checkbox" style="width:auto;" />
-            Kursiv
-          </label>
           <label class="span2">Alle Textfarben
             <select id="globalTextColorSelect">
               <option value="black" selected>Schwarz (Standard)</option>

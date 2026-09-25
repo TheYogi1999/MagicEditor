@@ -1146,28 +1146,42 @@
     });
   }
 
-  function fitArtwork() {
+  function fitArtwork(targetWidth = null) {
     const img = state.artwork;
-    if (!img) return;
+    if (!img) return false;
 
-    // Full-Art-Scryfall-Artworks dürfen die komplette Kartenfläche ausfüllen
-    // und können danach frei mit der Maus verschoben oder skaliert werden.
-    if (state.artworkMode === 'fullart') {
-      const scale = Math.max(CANVAS_W / img.width, CANVAS_H / img.height);
-      img.set({ scaleX: scale, scaleY: scale });
-      img.set({
-        left: (CANVAS_W - img.getScaledWidth()) / 2,
-        top: (CANVAS_H - img.getScaledHeight()) / 2,
-      });
-    } else {
-      // Eigene hochgeladene Artworks weiterhin auf den klassischen Artwork-Bereich einpassen.
-      const box = { left: 71, top: 155, width: 863, height: 625 };
-      const scale = Math.max(box.width / img.width, box.height / img.height);
+    const requestedWidth = Number(targetWidth);
+    if (Number.isFinite(requestedWidth) && requestedWidth > 0) {
+      const box = state.artworkMode === 'fullart'
+        ? { left: 0, top: 0, width: CANVAS_W, height: CANVAS_H }
+        : { left: 71, top: 155, width: 863, height: 625 };
+      const scale = requestedWidth / Math.max(1, img.width);
       img.set({ scaleX: scale, scaleY: scale });
       img.set({
         left: box.left + (box.width - img.getScaledWidth()) / 2,
         top: box.top + (box.height - img.getScaledHeight()) / 2,
       });
+    } else {
+
+      // Full-Art-Scryfall-Artworks dürfen die komplette Kartenfläche ausfüllen
+      // und können danach frei mit der Maus verschoben oder skaliert werden.
+      if (state.artworkMode === 'fullart') {
+        const scale = Math.max(CANVAS_W / img.width, CANVAS_H / img.height);
+        img.set({ scaleX: scale, scaleY: scale });
+        img.set({
+          left: (CANVAS_W - img.getScaledWidth()) / 2,
+          top: (CANVAS_H - img.getScaledHeight()) / 2,
+        });
+      } else {
+        // Eigene hochgeladene Artworks weiterhin auf den klassischen Artwork-Bereich einpassen.
+        const box = { left: 71, top: 155, width: 863, height: 625 };
+        const scale = Math.max(box.width / img.width, box.height / img.height);
+        img.set({ scaleX: scale, scaleY: scale });
+        img.set({
+          left: box.left + (box.width - img.getScaledWidth()) / 2,
+          top: box.top + (box.height - img.getScaledHeight()) / 2,
+        });
+      }
     }
     // Fabric speichert die Trefferfläche eines Objekts zwischen. Nach dem
     // Einpassen muss sie sofort aktualisiert werden, sonst greift erst ein
@@ -1176,6 +1190,7 @@
     state.canvas.discardActiveObject();
     state.canvas.setActiveObject(img);
     state.canvas.requestRenderAll();
+    return true;
   }
 
   function scryfallCardText(card, lang) {
@@ -2466,7 +2481,9 @@
     document.addEventListener('click', event => {
       if (!event.target.closest('.artwork-picker')) closeArtworkPicker();
     });
-    $('fitArtBtn').addEventListener('click', fitArtwork);
+    $('fitArtBtn').addEventListener('click', () => {
+      if (fitArtwork(445)) setStatus('Bild eingepasst: Breite 445');
+    });
     $('sendArtBackBtn').addEventListener('click', () => {
       if (!state.artwork) return;
       state.artwork.sendToBack();
