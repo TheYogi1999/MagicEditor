@@ -55,8 +55,7 @@
     ptBackground: null,
     ptBackgroundEnabled: true,
     ptBackgroundKey: '',
-    autoTextContrast: true,
-    autoContrastTimer: null,
+    globalTextColor: 'black',
     fields: {},
     templates: [],
     currentTemplateIndex: 0,
@@ -73,6 +72,7 @@
   };
 
   const DEFAULT_SET_SYMBOL_LAYOUT = { left: 888.119819580301, top: 831.2668294567007, width: 62, height: 62, scaleX: 0.032914973847774524, scaleY: 0.032914973847774524, angle: 0, opacity: 1 };
+  const GLOBAL_TEXT_COLORS = { black:'#111111', gray:'#777777', white:'#f4f3ee' };
   const RARITY_TEXTURES = {
     common:   ['#626262', '#1f1f1f', '#080808', '#3b3b3b', '#111111'],
     uncommon: ['#eef3f6', '#8f9aa3', '#58636a', '#c9d1d6', '#707b82'],
@@ -430,7 +430,6 @@
     state.canvas.on('selection:created', syncSelectionControls);
     state.canvas.on('selection:updated', syncSelectionControls);
     state.canvas.on('object:modified', syncBoundInputFromObject);
-    state.canvas.on('object:modified', () => scheduleAutoTextContrast(40));
     state.canvas.on('text:changed', syncBoundInputFromObject);
 
     createTextObjects(defaultLayout);
@@ -506,88 +505,36 @@
   }
 
 
-  function luminanceFromRgb(r,g,b){
-    const conv=v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);};
-    return 0.2126*conv(r)+0.7152*conv(g)+0.0722*conv(b);
+  function normalizeGlobalTextColor(value) {
+    return Object.prototype.hasOwnProperty.call(GLOBAL_TEXT_COLORS, value) ? value : 'black';
   }
 
-  function sampleBackgroundLuminanceForObject(obj, ctx){
-    if(!obj || !ctx) return 1;
-    const rect=obj.getBoundingRect(true,true);
-    const x0=Math.max(0,Math.floor(rect.left));
-    const y0=Math.max(0,Math.floor(rect.top));
-    const x1=Math.min(CANVAS_W-1,Math.ceil(rect.left+rect.width));
-    const y1=Math.min(CANVAS_H-1,Math.ceil(rect.top+rect.height));
-    if(x1<=x0 || y1<=y0) return 1;
+  function setGlobalTextColor(value, showStatus = true) {
+    const choice = normalizeGlobalTextColor(value);
+    const color = GLOBAL_TEXT_COLORS[choice];
+    state.globalTextColor = choice;
+    const select = $('globalTextColorSelect');
+    if (select) select.value = choice;
 
-    const xs=[.12,.3,.5,.7,.88], ys=[.2,.5,.8];
-    let total=0,count=0;
-    for(const fy of ys){
-      for(const fx of xs){
-        const x=Math.max(0,Math.min(CANVAS_W-1,Math.round(x0+(x1-x0)*fx)));
-        const y=Math.max(0,Math.min(CANVAS_H-1,Math.round(y0+(y1-y0)*fy)));
-        try{
-          const p=ctx.getImageData(x,y,1,1).data;
-          if(p[3]<20) continue;
-          total+=luminanceFromRgb(p[0],p[1],p[2]); count++;
-        }catch(_){ return 1; }
+    for (const obj of Object.values(state.fields)) {
+      if (!obj) continue;
+      if (obj.editorType === 'rich') {
+        obj.editorFill = color;
+        obj.getObjects().forEach(part => {
+          if (part.type === 'text') part.set('fill', color);
+        });
+        obj.dirty = true;
+      } else {
+        obj.set('fill', color);
       }
+      obj.setCoords();
     }
-    return count ? total/count : 1;
-  }
-
-  async function applyAutoTextContrast(){
-    if(!state.autoTextContrast || !state.canvas) return;
-
-    const keys=['title','type','rules','flavor','pt'];
-    const targets=keys.map(k=>[k,state.fields[k]]).filter(([,o])=>o && o.visible!==false);
-    if(!targets.length) return;
-
-    // Text kurz ausblenden, damit wirklich nur Frame/Artwork unter dem Text gemessen wird.
-    const visibility=targets.map(([,o])=>[o,o.visible]);
-    targets.forEach(([,o])=>o.visible=false);
-    state.canvas.discardActiveObject();
-    state.canvas.renderAll();
-
-    const ctx=state.canvas.lowerCanvasEl?.getContext('2d',{willReadFrequently:true});
-    const colors={};
-    if(ctx){
-      for(const [key,obj] of targets){
-        const lum=sampleBackgroundLuminanceForObject(obj,ctx);
-        // WCAG-Luminanz: unter ~0.34 wirkt der Hintergrund dunkel.
-        colors[key]=lum<0.34 ? '#f4f3ee' : '#111111';
-      }
+    if ($('textColor')) $('textColor').value = color;
+    state.canvas?.requestRenderAll();
+    if (showStatus) {
+      const label = choice === 'white' ? 'Weiß' : choice === 'gray' ? 'Grau' : 'Schwarz';
+      setStatus(`Alle Textfarben wurden auf ${label} gesetzt.`);
     }
-
-    visibility.forEach(([o,v])=>o.visible=v);
-    state.canvas.renderAll();
-
-    for(const [key,obj] of targets){
-      const wanted=colors[key];
-      if(!wanted) continue;
-      if(obj.editorType==='rich'){
-        if(String(obj.editorFill||'').toLowerCase()!==wanted){
-          await rebuildRichField(key,obj.editorText||'',{fill:wanted});
-        }
-      }else if(String(obj.fill||'').toLowerCase()!==wanted){
-        obj.set('fill',wanted);
-      }
-    }
-    state.canvas.requestRenderAll();
-    syncSelectionControls();
-  }
-
-  function scheduleAutoTextContrast(delay=80){
-    if(!state.autoTextContrast) return;
-    clearTimeout(state.autoContrastTimer);
-    state.autoContrastTimer=setTimeout(()=>applyAutoTextContrast(),delay);
-  }
-
-  function setAutoTextContrast(enabled){
-    state.autoTextContrast=!!enabled;
-    const t=$('autoTextContrastToggle');
-    if(t)t.checked=state.autoTextContrast;
-    if(state.autoTextContrast) scheduleAutoTextContrast(20);
   }
 
   async function ensureFontLoaded(family) {
@@ -1047,7 +994,6 @@
       keepTextAboveArtwork();
       if (state.setSymbol) state.setSymbol.bringToFront();
       state.canvas.requestRenderAll();
-      scheduleAutoTextContrast(60);
       setStatus(`${name} geladen`);
     }, { crossOrigin: 'anonymous' });
   }
@@ -1129,7 +1075,6 @@
     state.canvas.discardActiveObject();
     state.canvas.setActiveObject(img);
     state.canvas.requestRenderAll();
-    scheduleAutoTextContrast(60);
   }
 
   function scryfallCardText(card, lang) {
@@ -1199,7 +1144,6 @@
         img.setCoords();
         state.canvas.setActiveObject(img);
         state.canvas.requestRenderAll();
-        scheduleAutoTextContrast(80);
         resolve(true);
       }, { crossOrigin: 'anonymous' });
     });
@@ -1653,6 +1597,7 @@
       const source = repositoryLayouts.get(key)?.data || BUILTIN_LAYOUTS[key];
       const preset = JSON.parse(JSON.stringify(source));
       delete preset.artwork;
+      preset.globalTextColor = normalizeGlobalTextColor(preset.globalTextColor);
       // Abwärtskompatibilität für bestehende standard/vintage.json:
       // solange dort noch kein preferredFrameStyle gespeichert ist.
       if (!preset.preferredFrameStyle) {
@@ -1677,7 +1622,7 @@
         // Alte Standard-Layouts kennen den Stamp-Zustand noch nicht.
         preset.holoStamp = { enabled: true };
       }
-      applyLayout(preset);
+      await applyLayout(preset);
 
       // Bereits geladenes Artwork bleibt exakt an seiner aktuellen Position/Skalierung.
       // Falls noch keines da ist, übernimmt loadCardArtwork später die normale Einpassung.
@@ -1690,7 +1635,7 @@
       const item = repositoryLayouts.get(id);
       if (item?.data) {
         $('layoutName').value = item.data.name || item.label || id;
-        applyLayout(JSON.parse(JSON.stringify(item.data)));
+        await applyLayout(JSON.parse(JSON.stringify(item.data)));
       }
       return;
     }
@@ -1702,7 +1647,7 @@
       const data = getSavedLayouts()[name];
       if (data) {
         $('layoutName').value = data.name || name;
-        applyLayout(data);
+        await applyLayout(data);
       }
     }
   }
@@ -1873,7 +1818,6 @@
   function updateAllText(values) {
     Object.entries(values).forEach(([key,val]) => { syncBoundInputs(key,val||''); const obj=state.fields[key]; if(state.richKeys.has(key))rebuildRichField(key,val||''); else if(obj)obj.set('text',val||''); });
     if(state.canvas)state.canvas.requestRenderAll();
-    scheduleAutoTextContrast(100);
   }
 
   function updateOriginalCard(card, lang) {
@@ -1987,7 +1931,7 @@
       preferredFrameStyle: currentFrameStyle || 'new',
       vintageTextShadow: !!state.vintageTextShadowEnabled,
       flavorEnabled: $('flavorToggle')?.checked !== false,
-      autoTextContrast: !!state.autoTextContrast,
+      globalTextColor: state.globalTextColor,
       ptBackground: {
         enabled: !!state.ptBackgroundEnabled
       },
@@ -2023,19 +1967,32 @@
     };
   }
 
-  function applyLayout(data) {
+  async function applyLayout(data) {
     // Optionaler Layout→Frame-Link. Alte Layout-Dateien ohne preferredFrameStyle
     // bleiben vollständig kompatibel.
     if (data?.preferredFrameStyle) {
       setQuickFrameStyle(String(data.preferredFrameStyle), true);
     }
+    const globalTextColor = normalizeGlobalTextColor(data.globalTextColor);
+    const globalFill = GLOBAL_TEXT_COLORS[globalTextColor];
+    state.globalTextColor = globalTextColor;
+    if ($('globalTextColorSelect')) $('globalTextColorSelect').value = globalTextColor;
+
     const fields = data.fields || data;
+    const richRebuilds = [];
     Object.entries(fields).forEach(([key, cfg]) => {
       const obj = state.fields[key];
       if (!obj || !cfg) return;
-      if(state.richKeys.has(key)){const input=document.querySelector(`[data-bind="${key}"]`);rebuildRichField(key,input?.value||obj.editorText||'',cfg);return;}
-      if(cfg.fontFamily)ensureFontLoaded(cfg.fontFamily); obj.set(cfg); obj.setCoords();
+      const appliedCfg = { ...cfg, fill: globalFill };
+      if(state.richKeys.has(key)){
+        const input=document.querySelector(`[data-bind="${key}"]`);
+        richRebuilds.push(rebuildRichField(key,input?.value||obj.editorText||'',appliedCfg));
+        return;
+      }
+      if(appliedCfg.fontFamily)ensureFontLoaded(appliedCfg.fontFamily); obj.set(appliedCfg); obj.setCoords();
     });
+    await Promise.all(richRebuilds);
+    if ($('textColor')) $('textColor').value = globalFill;
     if (data.artwork && state.artwork) {
       state.artwork.set(data.artwork);
       state.artwork.setCoords();
@@ -2086,7 +2043,6 @@
       : data.preferredFrameStyle === 'vintage';
     setVintageTextShadows(useVintageTextShadow);
     state.canvas.requestRenderAll();
-    if(typeof data.autoTextContrast==='boolean') setAutoTextContrast(data.autoTextContrast); else scheduleAutoTextContrast(100);
     setStatus(`Layout „${data.name || 'geladen'}“ angewendet`);
   }
 
@@ -2335,7 +2291,7 @@
     });
     $('frameStyleSelect').addEventListener('change', e => setQuickFrameStyle(e.target.value, true));
     $('builtinLayoutSelect').addEventListener('change', e => applyLayoutPresetValue(e.target.value));
-    $('autoTextContrastToggle').addEventListener('change', e => setAutoTextContrast(e.target.checked));
+    $('globalTextColorSelect').addEventListener('change', e => setGlobalTextColor(e.target.value));
     $('textFieldsLockToggle').addEventListener('change', e => setTextFieldsLocked(e.target.checked));
     $('flavorToggle').addEventListener('change', e => setFlavorEnabled(e.target.checked));
 
@@ -2398,7 +2354,7 @@
     $('fontSize').addEventListener('input', e => updateSelected('fontSize', Number(e.target.value)));
     $('textWidth').addEventListener('input', e => updateSelected('width', Number(e.target.value)));
     $('opacity').addEventListener('input', e => updateSelected('opacity', Number(e.target.value)));
-    $('textColor').addEventListener('input', e => { if(state.autoTextContrast)setAutoTextContrast(false); updateSelected('fill', e.target.value); });
+    $('textColor').addEventListener('input', e => updateSelected('fill', e.target.value));
     $('fontFamily').addEventListener('change',e=>updateSelected('fontFamily',e.target.value));
     $('fontUpload').addEventListener('change',async e=>{
       const file=e.target.files?.[0]; if(!file)return;
@@ -2444,7 +2400,7 @@
 
     $('saveLayoutBtn').addEventListener('click', saveLayoutLocal);
     $('loadLayoutBtn').addEventListener('click', loadLayoutLocal);
-    $('resetLayoutBtn').addEventListener('click', () => applyLayout({ name: 'Standard', fields: defaultLayout }));
+    $('resetLayoutBtn').addEventListener('click', () => applyLayout({ name: 'Standard', globalTextColor: 'black', fields: defaultLayout }));
     $('downloadLayoutBtn').addEventListener('click', downloadLayout);
         $('layoutUpload').addEventListener('change', async e => {
       const file = e.target.files?.[0];
@@ -2458,7 +2414,7 @@
         setSavedLayouts(layouts);
         refreshLayoutPresetSelect('saved:' + name);
         $('layoutName').value = name;
-        applyLayout(data);
+        await applyLayout(data);
         setStatus(`Layout „${name}“ importiert und zu Layout-Vorlage hinzugefügt`);
       } catch (err) {
         setStatus('Layout-Datei konnte nicht gelesen werden.', true);
@@ -2496,7 +2452,6 @@
     refreshLayoutPresetSelect('builtin:standard');
     setQuickFrameStyle('new', false);
     setFlavorEnabled(true);
-    setAutoTextContrast(true);
     if (canvasReady) {
       // Beim Start wirklich dieselbe Standard-Vorlage anwenden, die auch im Dropdown
       // ausgewählt ist. Falls layouts/standard.json vorhanden ist, hat sie Vorrang vor

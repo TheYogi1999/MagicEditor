@@ -200,9 +200,12 @@
             <input id="fontItalic" type="checkbox" style="width:auto;" />
             Kursiv
           </label>
-          <label class="span2" style="display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;">
-            <input id="autoTextContrastToggle" type="checkbox" checked style="width:auto;" />
-            Textfarbe automatisch an Hintergrund anpassen
+          <label class="span2">Alle Textfarben
+            <select id="globalTextColorSelect">
+              <option value="black" selected>Schwarz (Standard)</option>
+              <option value="gray">Grau</option>
+              <option value="white">Weiß</option>
+            </select>
           </label>
           <label class="span2" style="display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;">
             <input id="textFieldsLockToggle" type="checkbox" style="width:auto;" />
