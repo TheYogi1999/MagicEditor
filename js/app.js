@@ -377,7 +377,7 @@
   }
 
   function landWatermarkTop() {
-    return currentFrameStyle === 'vintage' ? -30 : 0;
+    return currentFrameStyle === 'vintage' ? -40 : 0;
   }
 
   function refreshRulesDisplay(card = state.localizedCard || state.cardBase) {
