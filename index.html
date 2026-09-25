@@ -174,7 +174,14 @@
           <label>Name<input id="titleInput" data-bind="title" type="text" /></label>
           <label>Mana<input id="manaInput" data-bind="mana" type="text" /></label>
           <label>Typ<input id="typeInput" data-bind="type" type="text" /></label>
-          <label class="span2">Kartentext<textarea id="rulesInput" data-bind="rules" rows="7"></textarea></label>
+          <label class="span2">Anzeige im Textfeld
+            <select id="rulesDisplayModeSelect">
+              <option value="text">Kartentext</option>
+              <option value="watermark">Land-Watermark</option>
+            </select>
+          </label>
+          <label id="rulesField" class="span2">Kartentext<textarea id="rulesInput" data-bind="rules" rows="7"></textarea></label>
+          <p class="hint span2">Bei Standardländern wird automatisch das passende Plains-, Island-, Swamp-, Mountain-, Forest- oder Wastes-Watermark gewählt.</p>
           <label class="span2" style="display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;">
             <input id="flavorToggle" type="checkbox" checked style="width:auto;" /> Flavor-Text anzeigen
           </label>

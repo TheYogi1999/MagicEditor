@@ -55,6 +55,10 @@
     ptBackground: null,
     ptBackgroundEnabled: true,
     ptBackgroundKey: '',
+    landWatermark: null,
+    landWatermarkKey: '',
+    landWatermarkRequestId: 0,
+    rulesDisplayMode: 'text',
     globalTextColor: 'black',
     fields: {},
     templates: [],
@@ -94,6 +98,14 @@
   const BUILTIN_HOLO_STAMPS = {"A":"overlays/HoloStamps/HoloStamp_A.png","Acorn":"overlays/HoloStamps/HoloStamp_Acorn.png","Alchemy":"overlays/HoloStamps/HoloStamp_Alchemy.png","B":"overlays/HoloStamps/HoloStamp_B.png","BG":"overlays/HoloStamps/HoloStamp_BG.png","BR":"overlays/HoloStamps/HoloStamp_BR.png","C":"overlays/HoloStamps/HoloStamp_C.png","G":"overlays/HoloStamps/HoloStamp_G.png","GU":"overlays/HoloStamps/HoloStamp_GU.png","GW":"overlays/HoloStamps/HoloStamp_GW.png","Gray":"overlays/HoloStamps/HoloStamp_Gray.png","L":"overlays/HoloStamps/HoloStamp_L.png","M":"overlays/HoloStamps/HoloStamp_M.png","Plane":"overlays/HoloStamps/HoloStamp_Plane.png","R":"overlays/HoloStamps/HoloStamp_R.png","RG":"overlays/HoloStamps/HoloStamp_RG.png","RW":"overlays/HoloStamps/HoloStamp_RW.png","U":"overlays/HoloStamps/HoloStamp_U.png","UB":"overlays/HoloStamps/HoloStamp_UB.png","UR":"overlays/HoloStamps/HoloStamp_UR.png","W":"overlays/HoloStamps/HoloStamp_W.png","WB":"overlays/HoloStamps/HoloStamp_WB.png","WU":"overlays/HoloStamps/HoloStamp_WU.png"};
   const BUILTIN_NICKNAMES = {"A":"overlays/Nicknames/Nickname_A.png","B":"overlays/Nicknames/Nickname_B.png","BG":"overlays/Nicknames/Nickname_BG.png","BR":"overlays/Nicknames/Nickname_BR.png","C":"overlays/Nicknames/Nickname_C.png","G":"overlays/Nicknames/Nickname_G.png","GU":"overlays/Nicknames/Nickname_GU.png","GW":"overlays/Nicknames/Nickname_GW.png","L":"overlays/Nicknames/Nickname_L.png","M":"overlays/Nicknames/Nickname_M.png","R":"overlays/Nicknames/Nickname_R.png","RG":"overlays/Nicknames/Nickname_RG.png","RW":"overlays/Nicknames/Nickname_RW.png","U":"overlays/Nicknames/Nickname_U.png","UB":"overlays/Nicknames/Nickname_UB.png","UR":"overlays/Nicknames/Nickname_UR.png","W":"overlays/Nicknames/Nickname_W.png","WB":"overlays/Nicknames/Nickname_WB.png","WU":"overlays/Nicknames/Nickname_WU.png"};
   const BUILTIN_PT_BACKGROUNDS = {"A": "overlays/pt/A.png", "B": "overlays/pt/B.png", "C": "overlays/pt/C.png", "G": "overlays/pt/G.png", "M": "overlays/pt/M.png", "R": "overlays/pt/R.png", "U": "overlays/pt/U.png", "V": "overlays/pt/V.png", "W": "overlays/pt/W.png"};
+  const BUILTIN_LAND_WATERMARKS = {
+    W: 'overlays/Land-Watermark/W.png',
+    U: 'overlays/Land-Watermark/U.png',
+    B: 'overlays/Land-Watermark/B.png',
+    R: 'overlays/Land-Watermark/R.png',
+    G: 'overlays/Land-Watermark/G.png',
+    C: 'overlays/Land-Watermark/C.png',
+  };
   const DEFAULT_LEGEND_CROWN_LAYOUT = { left: 502.5, top: 77, scaleX: 1, scaleY: 1, angle: 0, opacity: 1 };
   const LEGEND_CROWN_POS_KEY = 'mtg-card-editor-legend-crown-transform-v1';
 
@@ -326,6 +338,87 @@
       keepTextAboveArtwork();
       state.canvas.requestRenderAll();
     }, { crossOrigin:'anonymous' });
+  }
+
+  function basicLandWatermarkKey(card) {
+    if (!card) return '';
+    const faces = Array.isArray(card.card_faces) && card.card_faces.length ? card.card_faces : [card];
+    for (const face of faces) {
+      const typeLine = String(face.type_line || card.type_line || '');
+      if (!/\bBasic\b/i.test(typeLine) || !/\bLand\b/i.test(typeLine)) continue;
+      if (/\bPlains\b/i.test(typeLine)) return 'W';
+      if (/\bIsland\b/i.test(typeLine)) return 'U';
+      if (/\bSwamp\b/i.test(typeLine)) return 'B';
+      if (/\bMountain\b/i.test(typeLine)) return 'R';
+      if (/\bForest\b/i.test(typeLine)) return 'G';
+      if (/\bWastes\b/i.test(typeLine)) return 'C';
+    }
+    return '';
+  }
+
+  function setRulesTextVisible(visible) {
+    const obj = state.fields.rules;
+    if (obj) {
+      obj.set('visible', !!visible);
+      updateTextFieldInteraction(obj);
+      if (!visible && state.canvas?.getActiveObject() === obj) state.canvas.discardActiveObject();
+    }
+    const input = $('rulesInput');
+    const field = $('rulesField');
+    if (input) input.disabled = !visible;
+    if (field) field.style.opacity = visible ? '1' : '.45';
+  }
+
+  function removeLandWatermark() {
+    state.landWatermarkRequestId++;
+    if (state.landWatermark && state.canvas) state.canvas.remove(state.landWatermark);
+    state.landWatermark = null;
+    state.landWatermarkKey = '';
+  }
+
+  function refreshRulesDisplay(card = state.localizedCard || state.cardBase) {
+    if (!state.canvas) return;
+    const key = basicLandWatermarkKey(card);
+    const useWatermark = state.rulesDisplayMode === 'watermark' && !!key;
+    setRulesTextVisible(!useWatermark);
+    removeLandWatermark();
+    state.landWatermarkKey = key;
+    if (!useWatermark || !BUILTIN_LAND_WATERMARKS[key]) {
+      state.canvas.requestRenderAll();
+      return;
+    }
+
+    const requestId = ++state.landWatermarkRequestId;
+    fabric.Image.fromURL(BUILTIN_LAND_WATERMARKS[key], img => {
+      if (!img || requestId !== state.landWatermarkRequestId || state.rulesDisplayMode !== 'watermark') return;
+      img.set({
+        left: 0, top: 0,
+        scaleX: CANVAS_W / Math.max(1, img.width),
+        scaleY: CANVAS_H / Math.max(1, img.height),
+        angle: 0, opacity: 1,
+        originX: 'left', originY: 'top',
+        name: '__land_watermark__',
+        selectable: false, evented: false, objectCaching: false,
+      });
+      state.landWatermark = img;
+      state.canvas.add(img);
+      keepTextAboveArtwork();
+      state.canvas.requestRenderAll();
+    }, { crossOrigin: 'anonymous' });
+  }
+
+  function setRulesDisplayMode(mode, showStatus = true, card = state.localizedCard || state.cardBase) {
+    state.rulesDisplayMode = mode === 'watermark' ? 'watermark' : 'text';
+    const select = $('rulesDisplayModeSelect');
+    if (select) select.value = state.rulesDisplayMode;
+    refreshRulesDisplay(card);
+    if (!showStatus) return;
+    const key = basicLandWatermarkKey(card);
+    if (state.rulesDisplayMode === 'watermark' && !key) {
+      setStatus('Land-Watermarks sind nur für Standardländer verfügbar. Der Kartentext bleibt sichtbar.', true);
+    } else {
+      setStatus(state.rulesDisplayMode === 'watermark' ? `Land-Watermark ${key} angezeigt` : 'Kartentext angezeigt');
+    }
   }
 
   const SET_SYMBOL_POS_KEY = 'mtg-card-editor-set-symbol-transform-v1';
@@ -842,6 +935,9 @@
       editorWidth:key==='mana'?Math.max(Number(cfg.width||0),contentWidth):maxWidth,editorFill:cfg.fill||'#111111',editorLineHeight:cfg.lineHeight,
       editorTextAlign:cfg.textAlign||(key==='mana'?'right':'left'),editorAnchorRight:key==='mana'
     });
+    if (key === 'rules' && state.rulesDisplayMode === 'watermark' && basicLandWatermarkKey(state.localizedCard || state.cardBase)) {
+      group.set('visible', false);
+    }
     updateTextFieldInteraction(group);
     if(old)state.canvas.remove(old);
     state.fields[key]=group;state.canvas.add(group);keepTextAboveArtwork();state.canvas.requestRenderAll();
@@ -1007,6 +1103,7 @@
     if (state.ptBackground) state.ptBackground.bringToFront();
     if (state.holoStamp) state.holoStamp.bringToFront();
     if (state.nicknameOverlay) state.nicknameOverlay.bringToFront();
+    if (state.landWatermark) state.landWatermark.bringToFront();
     Object.entries(state.fields).forEach(([key,obj]) => {
       // Nickname text belongs directly above its matching overlay.
       if(key!=='nickname') obj.bringToFront();
@@ -1705,6 +1802,9 @@
     try {
       const base = await fetchJson(`${API}/cards/named?fuzzy=${encodeURIComponent(query)}`);
       state.cardBase = base;
+      // Eine neu gesuchte Standardland-Karte startet direkt mit ihrem passenden
+      // Watermark. Bei allen anderen Karten bleibt der normale Kartentext aktiv.
+      setRulesDisplayMode(basicLandWatermarkKey(base) ? 'watermark' : 'text', false, base);
       await loadEditions(base);
       await applyEditionLanguage();
       setStatus(`${base.name} geladen`);
@@ -1795,7 +1895,8 @@
       await buildSetSymbol(state.setSymbolSetCode, state.setSymbolRarity, true);
     }
     const text = scryfallCardText(card, lang);
-    updateAllText(text);
+    await updateAllText(text);
+    refreshRulesDisplay(card);
     updateOriginalCard(card, card.lang || lang);
     const autoFrame = autoSelectFrameForCard(card);
     await loadCardArtwork(card);
@@ -1815,8 +1916,15 @@
     return applyEditionLanguage();
   }
 
-  function updateAllText(values) {
-    Object.entries(values).forEach(([key,val]) => { syncBoundInputs(key,val||''); const obj=state.fields[key]; if(state.richKeys.has(key))rebuildRichField(key,val||''); else if(obj)obj.set('text',val||''); });
+  async function updateAllText(values) {
+    const richRebuilds = [];
+    Object.entries(values).forEach(([key,val]) => {
+      syncBoundInputs(key,val||'');
+      const obj=state.fields[key];
+      if(state.richKeys.has(key)) richRebuilds.push(rebuildRichField(key,val||''));
+      else if(obj) obj.set('text',val||'');
+    });
+    await Promise.all(richRebuilds);
     if(state.canvas)state.canvas.requestRenderAll();
   }
 
@@ -1931,6 +2039,7 @@
       preferredFrameStyle: currentFrameStyle || 'new',
       vintageTextShadow: !!state.vintageTextShadowEnabled,
       flavorEnabled: $('flavorToggle')?.checked !== false,
+      rulesDisplayMode: state.rulesDisplayMode,
       globalTextColor: state.globalTextColor,
       ptBackground: {
         enabled: !!state.ptBackgroundEnabled
@@ -1998,6 +2107,11 @@
       state.artwork.setCoords();
     }
     if (typeof data.flavorEnabled === 'boolean') setFlavorEnabled(data.flavorEnabled);
+    if (typeof data.rulesDisplayMode === 'string') {
+      setRulesDisplayMode(data.rulesDisplayMode, false);
+    } else {
+      refreshRulesDisplay();
+    }
     if (data.ptBackground) {
       state.ptBackgroundEnabled = data.ptBackground.enabled !== false;
       if ($('ptBackgroundToggle')) $('ptBackgroundToggle').checked = state.ptBackgroundEnabled;
@@ -2292,6 +2406,7 @@
     $('frameStyleSelect').addEventListener('change', e => setQuickFrameStyle(e.target.value, true));
     $('builtinLayoutSelect').addEventListener('change', e => applyLayoutPresetValue(e.target.value));
     $('globalTextColorSelect').addEventListener('change', e => setGlobalTextColor(e.target.value));
+    $('rulesDisplayModeSelect').addEventListener('change', e => setRulesDisplayMode(e.target.value));
     $('textFieldsLockToggle').addEventListener('change', e => setTextFieldsLocked(e.target.checked));
     $('flavorToggle').addEventListener('change', e => setFlavorEnabled(e.target.checked));
 
@@ -2400,7 +2515,7 @@
 
     $('saveLayoutBtn').addEventListener('click', saveLayoutLocal);
     $('loadLayoutBtn').addEventListener('click', loadLayoutLocal);
-    $('resetLayoutBtn').addEventListener('click', () => applyLayout({ name: 'Standard', globalTextColor: 'black', fields: defaultLayout }));
+    $('resetLayoutBtn').addEventListener('click', () => applyLayout({ name: 'Standard', globalTextColor: 'black', rulesDisplayMode: 'text', fields: defaultLayout }));
     $('downloadLayoutBtn').addEventListener('click', downloadLayout);
         $('layoutUpload').addEventListener('change', async e => {
       const file = e.target.files?.[0];
