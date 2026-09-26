@@ -59,6 +59,8 @@
     landWatermarkKey: '',
     landWatermarkRequestId: 0,
     rulesDisplayMode: 'text',
+    flavorSeparator: null,
+    flavorSeparatorEnabled: true,
     globalTextColor: 'black',
     fields: {},
     templates: [],
@@ -548,6 +550,7 @@
       state.fields.nickname.set('visible',state.nicknameEnabled);
       updateTextFieldInteraction(state.fields.nickname);
     }
+    updateFlavorSeparator();
   }
 
   function updateTextFieldInteraction(obj) {
@@ -627,6 +630,7 @@
       obj.setCoords();
     }
     if ($('textColor')) $('textColor').value = color;
+    updateFlavorSeparator();
     state.canvas?.requestRenderAll();
     if (showStatus) {
       const label = choice === 'white' ? 'Weiß' : choice === 'gray' ? 'Grau' : 'Schwarz';
@@ -1121,6 +1125,7 @@
     if (state.holoStamp) state.holoStamp.bringToFront();
     if (state.nicknameOverlay) state.nicknameOverlay.bringToFront();
     if (state.landWatermark) state.landWatermark.bringToFront();
+    if (state.flavorSeparator) state.flavorSeparator.bringToFront();
     Object.entries(state.fields).forEach(([key,obj]) => {
       // Nickname text belongs directly above its matching overlay.
       if(key!=='nickname') obj.bringToFront();
@@ -1962,6 +1967,7 @@
       else if(obj) obj.set('text',val||'');
     });
     await Promise.all(richRebuilds);
+    updateFlavorSeparator();
     if(state.canvas)state.canvas.requestRenderAll();
   }
 
@@ -2015,7 +2021,21 @@
 
   function syncBoundInputs(key,value){document.querySelectorAll(`[data-bind="${key}"]`).forEach(input=>{input.value=value;});}
 
-  function bindTextInputs() { document.querySelectorAll('[data-bind]').forEach(input=>input.addEventListener('input',()=>{const key=input.dataset.bind,obj=state.fields[key];syncBoundInputs(key,input.value);if(state.richKeys.has(key)){rebuildRichField(key,input.value);return;}if(!obj)return;obj.set('text',input.value);state.canvas.requestRenderAll();})); }
+  function bindTextInputs() {
+    document.querySelectorAll('[data-bind]').forEach(input => input.addEventListener('input', () => {
+      const key = input.dataset.bind;
+      const obj = state.fields[key];
+      syncBoundInputs(key, input.value);
+      if (state.richKeys.has(key)) {
+        rebuildRichField(key, input.value);
+        return;
+      }
+      if (!obj) return;
+      obj.set('text', input.value);
+      if (key === 'flavor') updateFlavorSeparator();
+      state.canvas.requestRenderAll();
+    }));
+  }
 
   function syncSelectionControls() { const obj=state.canvas.getActiveObject(); if(!obj)return; $('fontSize').value=obj.editorType==='rich'?obj.editorFontSize:(obj.fontSize||''); $('textWidth').value=Math.round(obj.editorType==='rich'?obj.editorWidth:(obj.width||0)); $('opacity').value=obj.opacity??1; const fill=obj.editorType==='rich'?obj.editorFill:obj.fill; if(typeof fill==='string'&&fill.startsWith('#'))$('textColor').value=fill; const fam=obj.editorType==='rich'?obj.editorFontFamily:obj.fontFamily; if(fam)$('fontFamily').value=fam; }
 
@@ -2030,6 +2050,7 @@
     if (!obj.name || !state.fields[obj.name]) return;
     const value=obj.editorType==='rich'?(obj.editorText||''):(typeof obj.text==='string'?obj.text:'');
     syncBoundInputs(obj.name,value);
+    if (obj.name === 'flavor') updateFlavorSeparator();
     syncSelectionControls();
   }
 
@@ -2053,7 +2074,7 @@
     return true;
   }
 
-  async function updateSelected(prop,value){const obj=state.canvas.getActiveObject();if(!obj)return;if(obj.editorType==='rich'&&await updateRichStyle(obj,prop,value))return;if(prop==='fontFamily')await ensureFontLoaded(value);obj.set(prop,value);state.canvas.requestRenderAll();}
+  async function updateSelected(prop,value){const obj=state.canvas.getActiveObject();if(!obj)return;if(obj.editorType==='rich'&&await updateRichStyle(obj,prop,value))return;if(prop==='fontFamily')await ensureFontLoaded(value);obj.set(prop,value);if(obj.name==='flavor')updateFlavorSeparator();state.canvas.requestRenderAll();}
 
   function serializeLayout() {
     const fields = {};
@@ -2076,6 +2097,7 @@
       preferredFrameStyle: currentFrameStyle || 'new',
       vintageTextShadow: !!state.vintageTextShadowEnabled,
       flavorEnabled: $('flavorToggle')?.checked !== false,
+      flavorSeparatorEnabled: !!state.flavorSeparatorEnabled,
       rulesDisplayMode: state.rulesDisplayMode,
       globalTextColor: state.globalTextColor,
       ptBackground: {
@@ -2144,6 +2166,7 @@
       state.artwork.setCoords();
     }
     if (typeof data.flavorEnabled === 'boolean') setFlavorEnabled(data.flavorEnabled);
+    setFlavorSeparatorEnabled(data.flavorSeparatorEnabled !== false, false);
     if (typeof data.rulesDisplayMode === 'string') {
       setRulesDisplayMode(data.rulesDisplayMode, false);
     } else {
@@ -2358,7 +2381,57 @@
       updateTextFieldInteraction(obj);
       if (!checked && state.canvas?.getActiveObject() === obj) state.canvas.discardActiveObject();
     }
+    updateFlavorSeparator();
     if (state.canvas) state.canvas.requestRenderAll();
+  }
+
+  function updateFlavorSeparator() {
+    if (!state.canvas) return;
+    const flavor = state.fields.flavor;
+    const visible = !!state.flavorSeparatorEnabled && flavor?.visible !== false && String(flavor?.text || '').trim().length > 0;
+    if (!visible || !flavor) {
+      if (state.flavorSeparator) state.flavorSeparator.set('visible', false);
+      state.canvas.requestRenderAll();
+      return;
+    }
+
+    const angle = Number(flavor.angle || 0);
+    const radians = angle * Math.PI / 180;
+    const scaledWidth = Math.max(1, Number(flavor.width || 0) * Number(flavor.scaleX || 1));
+    const localX = scaledWidth / 2;
+    const localY = -18;
+    const left = Number(flavor.left || 0) + Math.cos(radians) * localX - Math.sin(radians) * localY;
+    const top = Number(flavor.top || 0) + Math.sin(radians) * localX + Math.cos(radians) * localY;
+    const length = Math.min(180, Math.max(90, scaledWidth * 0.22));
+
+    if (!state.flavorSeparator) {
+      state.flavorSeparator = new fabric.Line([-90, 0, 90, 0], {
+        name: '__flavor_separator__',
+        originX: 'center', originY: 'center',
+        selectable: false, evented: false, objectCaching: false,
+        strokeWidth: 3, strokeUniform: true,
+      });
+      state.canvas.add(state.flavorSeparator);
+    }
+    state.flavorSeparator.set({
+      left, top, angle, scaleX: length / 180, scaleY: 1,
+      stroke: typeof flavor.fill === 'string' ? flavor.fill : '#111111',
+      opacity: flavor.opacity ?? 1,
+      visible: true,
+    });
+    state.flavorSeparator.setCoords();
+    keepTextAboveArtwork();
+    state.canvas.requestRenderAll();
+  }
+
+  function setFlavorSeparatorEnabled(enabled, showStatus = true) {
+    state.flavorSeparatorEnabled = !!enabled;
+    const toggle = $('flavorSeparatorToggle');
+    if (toggle) toggle.checked = state.flavorSeparatorEnabled;
+    updateFlavorSeparator();
+    if (showStatus) {
+      setStatus(state.flavorSeparatorEnabled ? 'Trennlinie vor dem Flavor-Text aktiviert' : 'Trennlinie vor dem Flavor-Text deaktiviert');
+    }
   }
 
 
@@ -2446,6 +2519,7 @@
     $('rulesDisplayModeSelect').addEventListener('change', e => setRulesDisplayMode(e.target.value));
     $('textFieldsLockToggle').addEventListener('change', e => setTextFieldsLocked(e.target.checked));
     $('flavorToggle').addEventListener('change', e => setFlavorEnabled(e.target.checked));
+    $('flavorSeparatorToggle').addEventListener('change', e => setFlavorSeparatorEnabled(e.target.checked));
 
     $('templateSelect').addEventListener('change', e => {
       const idx = Number(e.target.value);
@@ -2554,7 +2628,7 @@
 
     $('saveLayoutBtn').addEventListener('click', saveLayoutLocal);
     $('loadLayoutBtn').addEventListener('click', loadLayoutLocal);
-    $('resetLayoutBtn').addEventListener('click', () => applyLayout({ name: 'Standard', globalTextColor: 'black', rulesDisplayMode: 'text', fields: defaultLayout }));
+    $('resetLayoutBtn').addEventListener('click', () => applyLayout({ name: 'Standard', globalTextColor: 'black', rulesDisplayMode: 'text', flavorSeparatorEnabled: true, fields: defaultLayout }));
     $('downloadLayoutBtn').addEventListener('click', downloadLayout);
         $('layoutUpload').addEventListener('change', async e => {
       const file = e.target.files?.[0];
