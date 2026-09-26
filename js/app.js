@@ -2402,21 +2402,33 @@
     const localY = -18;
     const left = Number(flavor.left || 0) + Math.cos(radians) * localX - Math.sin(radians) * localY;
     const top = Number(flavor.top || 0) + Math.sin(radians) * localX + Math.cos(radians) * localY;
-    const length = Math.min(180, Math.max(90, scaledWidth * 0.22));
+    const length = scaledWidth * 0.9;
+    const separatorColor = typeof flavor.fill === 'string' ? flavor.fill : '#111111';
+    const fade = new fabric.Gradient({
+      type: 'linear',
+      gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: length, y2: 0 },
+      colorStops: [
+        { offset: 0, color: separatorColor, opacity: 0 },
+        { offset: 0.18, color: separatorColor, opacity: 1 },
+        { offset: 0.82, color: separatorColor, opacity: 1 },
+        { offset: 1, color: separatorColor, opacity: 0 },
+      ],
+    });
 
     if (!state.flavorSeparator) {
-      state.flavorSeparator = new fabric.Line([-90, 0, 90, 0], {
+      state.flavorSeparator = new fabric.Rect({
         name: '__flavor_separator__',
         originX: 'center', originY: 'center',
         selectable: false, evented: false, objectCaching: false,
-        strokeWidth: 3, strokeUniform: true,
+        height: 3, strokeWidth: 0,
       });
       state.canvas.add(state.flavorSeparator);
     }
     state.flavorSeparator.set({
-      left, top, angle, scaleX: length / 180, scaleY: 1,
-      stroke: typeof flavor.fill === 'string' ? flavor.fill : '#111111',
-      opacity: flavor.opacity ?? 1,
+      left, top, angle, width: length, height: 3, scaleX: 1, scaleY: 1,
+      fill: fade,
+      opacity: 0.5,
       visible: true,
     });
     state.flavorSeparator.setCoords();
